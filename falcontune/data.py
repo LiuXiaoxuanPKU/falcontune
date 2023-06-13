@@ -7,6 +7,7 @@ from transformers.utils import logging
 
 logger = logging.get_logger("transformers")
 
+IGNORE_TOKEN_ID = -100
 
 class TrainDataBase(ABC):
     """
@@ -180,6 +181,64 @@ class TrainShareGPT(TrainDataBase):
     def __init__(self, dataset: str, val_set_size: int, tokenizer, cutoff_len) -> None:
         super().__init__(dataset, val_set_size, tokenizer, cutoff_len)
     
+    def tokenize(self, prompt: str, use_eos_token=True) -> Dict[str, Any]:
+        tokenized_prompt = self.tokenizer(
+            prompt,
+            truncation=True,
+            max_length=self.cutoff_len,
+            padding=False,
+            return_tensors=None,
+        )
+        if (
+            tokenized_prompt["input_ids"][-1] != self.tokenizer.eos_token_id
+            and len(tokenized_prompt["input_ids"]) < self.cutoff_len
+            and use_eos_token
+        ):
+            tokenized_prompt["input_ids"].append(self.tokenizer.eos_token_id)
+            tokenized_prompt["attention_mask"].append(1)
+        tokenized_prompt["labels"] = torch.tensor(tokenized_prompt["input_ids"])
+
+        if prompt == "IGNORE":
+            tokenized_prompt["labels"][:] = IGNORE_TOKEN_ID
+            return tokenized_prompt
+
+        # Mask targets
+        sep = " ASSISTANT: "
+
+        total_len = int(tokenized_prompt["labels"].ne(
+            self.tokenizer.pad_token_id).sum())
+
+        rounds = prompt.split("</s>")
+        cur_len = 0
+        tokenized_prompt["labels"][:cur_len] = IGNORE_TOKEN_ID
+        for i, rou in enumerate(rounds):
+            if rou == "":
+                break
+
+            rou += "</s>"
+            parts = rou.split(sep)
+            if len(parts) != 2:
+                break
+            parts[0] += sep
+            round_len = len(self.tokenizer(rou).input_ids)
+            instruction_len = len(self.tokenizer(parts[0]).input_ids)
+
+            tokenized_prompt["labels"][cur_len: cur_len +
+                                            instruction_len] = IGNORE_TOKEN_ID
+
+            cur_len += round_len
+        tokenized_prompt["labels"][cur_len:] = IGNORE_TOKEN_ID
+
+        if cur_len < self.cutoff_len:
+            if cur_len != total_len:
+                tokenized_prompt["labels"][:] = IGNORE_TOKEN_ID
+                print(
+                    f"WARNING: tokenization mismatch: {cur_len} vs. {total_len}."
+                    f" (ignored)"
+                )
+
+        return tokenized_prompt
+
     def prepare_data(self, **kwargs) -> None:
         data = load_dataset("json", data_files=self.dataset)
         
@@ -190,23 +249,16 @@ class TrainShareGPT(TrainDataBase):
             self.train_data = data["train"].shuffle().map(lambda x: self.generate_and_tokenize_prompt(x))
             self.val_data = None
 
-        train_dataset = train_dataset.map(
-            lambda ele: self.tokenize_inputs(ele),
-            batched=True,
-            remove_columns=["source", "prompt"],
-        )
-        self.train_data = train_dataset.with_format("torch")
+        self.train_data = self.train_data.with_format("torch")
 
     def generate_prompt(self, data_point):
-        return make_prompt(data_point["conversations"])
+        return make_prompt(None, None, None, data_point["conversations"])
     
     def generate_and_tokenize_prompt(self, data_point):
         prompt = self.generate_prompt(data_point)
-        label = torch.tensor(tokenized_full_prompt["input_ids"])
-        if prompt == "IGNORE":
-            pass
-        tokenized_full_prompt = self.tokenize(prompt)
-        
+        tokenized_prompt = self.tokenize(prompt)
+        return tokenized_prompt
+
         
     
 def make_prompt(instruction, input_, output="", conversation=[], type="shareGPT"):

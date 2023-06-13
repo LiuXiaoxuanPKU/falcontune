@@ -1,0 +1,21 @@
+falcontune finetune \
+    --model=falcon-7b \
+    --weights=/datadrive/models/falcon-7b/ \
+    --dataset=/datadrive/dataset/shareGPT/smaller.json \
+    --data_type=shareGPT \
+    --lora_out_dir=./falcon-7b-shareGPT/ \
+    --mbatch_size=1 \
+    --batch_size=2 \
+    --epochs=3 \
+    --lr=3e-4 \
+    --cutoff_len=2048 \
+    --lora_r=8 \
+    --lora_alpha=16 \
+    --lora_dropout=0.05 \
+    --warmup_steps=5 \
+    --save_steps=50 \
+    --save_total_limit=3 \
+    --logging_steps=5 \
+    --target_modules='["query_key_value"]' \
+    --val_set_size=0 \
+    --gradient_checkpointing
