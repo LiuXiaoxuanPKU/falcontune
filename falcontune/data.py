@@ -186,19 +186,23 @@ class TrainShareGPT(TrainDataBase):
         pass
 
     def prepare_data(self, **kwargs) -> None:
-        data = json.load(open(self.dataset, "r"))
-        print(data[0])
+        dataset = load_dataset("json", data_files=self.dataset)
         
         self.val_data = None
         if self.val_set_size > 0:
-            pass
-        else:
-            sources = [example["conversations"] for example in data]
-            self.train_data = self.preprocess(sources)
-            self.val_data = None
+            raise NotImplementedError()
+      
+        dataset = dataset["train"]
+        train_dataset = dataset.map(
+            lambda ele: self.tokenize_inputs(ele),
+            batched=True,
+            remove_columns=["conversations", "id"],
+        )
+        self.train_data = train_dataset.with_format("torch")
 
-    def preprocess(self, conversations):
-        conversations = [make_prompt(None, None, None,c) for c in conversations]
+
+    def tokenize_inputs(self, sources):
+        conversations = [make_prompt(None, None, None, c) for c in sources["conversations"]]
         conversations = [c for c in conversations if c != "IGNORE"]
         
         input_ids = self.tokenizer(
