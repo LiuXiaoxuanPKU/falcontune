@@ -1,251 +1,56 @@
-A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. USER: write me a input script for the quest 2 controllers, i need all input values so i can display them or use them, using xr interaction toolkit include headset and controller battery statuses each controller and headset get their own script write left script first ASSISTANT: Sure, here's an example script that uses the XR Interaction Toolkit to get input values from the left controller on the Oculus Quest 2, as well as the headset and controller battery statuses:
-```csharp
-using UnityEngine;
-using UnityEngine.XR;
-using UnityEngine.XR.Interaction.Toolkit;
+A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. USER: Isabella's family disapproves of Jack because of their family feud.
+Jack saves Isabella from danger, and they begin to fall in love. Please describe a specific scene about this episode. ASSISTANT: As Isabella was walking back home from the market one day, a group of men from Jack's family approached her. They taunted her about the feud between their families and threatened to harm her. Isabella was terrified and didn't know what to do.
 
-public class Quest2LeftInput : MonoBehaviour
-{
-    private InputDevice leftHandDevice;
-    private XRController leftHandController;
+Suddenly, Jack appeared out of nowhere and stepped in between Isabella and the men. He stood tall and confidently, despite the fact that he was outnumbered. Jack calmly told the men to leave Isabella alone and reminded them that she was innocent and had nothing to do with the feud.
 
-    private void Start()
-    {
-        // Get the left hand device
-        var leftHandDevices = new List<InputDevice>();
-        InputDevices.GetDevicesAtXRNode(XRNode.LeftHand, leftHandDevices);
-        if (leftHandDevices.Count == 1)
-        {
-            leftHandDevice = leftHandDevices[0];
-            leftHandController = GetComponent<XRController>();
-        }
-    }
+The men hesitated for a moment before finally backing down and leaving. Isabella was in awe of Jack's bravery and thanked him for saving her. Jack smiled at her and said that he couldn't stand by and let anything happen to her.
 
-    private void Update()
-    {
-        // Get input values
-        if (leftHandDevice != null)
-        {
-            float gripValue;
-            if (leftHandDevice.TryGetFeatureValue(CommonUsages.grip, out gripValue))
-            {
-                // Grip value is between 0 and 1
-                Debug.Log("Left Grip Value: " + gripValue);
-            }
+From that moment on, Isabella saw Jack in a different light. She realized that there was more to him than just his family name and the feud between their families. She began to see him as a kind and brave man, and started to fall in love with him.<|>USER: Isabella and Jack go on a romantic date, but their families find out and forbid them from seeing each other again. Please describe a specific scene about this episode. ASSISTANT: Isabella and Jack had planned the perfect date. They had booked a table at the fanciest restaurant in town, and Jack had even rented a horse-drawn carriage to take them there. Isabella had spent hours getting ready, choosing the perfect dress and doing her hair and makeup.
 
-            float triggerValue;
-            if (leftHandDevice.TryGetFeatureValue(CommonUsages.trigger, out triggerValue))
-            {
-                // Trigger value is between 0 and 1
-                Debug.Log("Left Trigger Value: " + triggerValue);
-            }
+As they enjoyed their dinner, they laughed and talked about their hopes and dreams for the future. Isabella couldn't believe how easy it was to talk to Jack, and how comfortable she felt around him. She had never felt this way about anyone before.
 
-            bool primaryButtonValue;
-            if (leftHandDevice.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonValue))
-            {
-                Debug.Log("Left Primary Button Value: " + primaryButtonValue);
-            }
+But as they were leaving the restaurant, they saw their families waiting for them outside. Isabella's parents looked furious, and Jack's father was red-faced with anger. They had found out about the date and had come to put a stop to it.
 
-            bool secondaryButtonValue;
-            if (leftHandDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonValue))
-            {
-                Debug.Log("Left Secondary Button Value: " + secondaryButtonValue);
-            }
+Isabella's father stepped forward and grabbed her by the arm. "You will never see this boy again," he said sternly. "Our families have been enemies for generations, and we will not let you ruin everything we have worked for."
 
-            Vector2 joystickValue;
-            if (leftHandDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out joystickValue))
-            {
-                Debug.Log("Left Joystick Value: " + joystickValue);
-            }
-        }
+Jack tried to intervene, but Isabella's father pushed him away. "Stay away from my daughter," he spat. "You are not welcome here."
 
-        // Get battery status for the headset
-        float headsetBatteryLevel;
-        if (InputDevices.GetDeviceAtXRNode(XRNode.Head).TryGetFeatureValue(CommonUsages.batteryLevel, out headsetBatteryLevel))
-        {
-            Debug.Log("Headset Battery Level: " + headsetBatteryLevel);
-        }
+Isabella felt tears welling up in her eyes as she watched Jack walk away, his shoulders slumped in defeat. She knew that her father would never allow her to be with Jack, and she didn't know how she could go on without him.<|>USER: Isabella and Jack meet secretly to continue their relationship, but they are caught by their families and punished. Please describe a specific scene about this episode. ASSISTANT: Isabella and Jack had been meeting secretly for weeks, unable to resist the pull of their growing feelings for each other despite the disapproval of their families. They had chosen a quiet spot in the park, hidden by the trees, and were lost in their own world as they talked and laughed together.
 
-        // Get battery status for the left controller
-        float leftControllerBatteryLevel;
-        if (leftHandDevice != null && leftHandDevice.TryGetFeatureValue(CommonUsages.batteryLevel, out leftControllerBatteryLevel))
-        {
-            Debug.Log("Left Controller Battery Level: " + leftControllerBatteryLevel);
-        }
-    }
-}
-```
-This script uses the XR Interaction Toolkit to get input values from the left controller on the Oculus Quest 2, as well as the headset and controller battery statuses. The script gets the left hand device and controller, and then listens for input values for grip, trigger, primary button, secondary button, and joystick. It then logs those input values to the console.
+But as they were about to say their goodbyes, they heard the sound of footsteps approaching. Suddenly, Isabella's father appeared from behind a nearby tree, followed closely by Jack's mother. Both of them had fury in their eyes.
 
-The script also gets the battery levels for the headset and left controller, if they are available, and logs those to the console as well.
+"What is the meaning of this?" Isabella's father demanded, his voice booming. "I trusted you, Isabella, and you have betrayed me!"
 
-You can use this script as a starting point and create a similar script for the right controller. Make sure to attach the appropriate script to each controller object in your scene.<|>USER: now right script ASSISTANT: Certainly! Here's an example script to get input values from the right Oculus Quest 2 controller and display them, using the XR Interaction Toolkit:
-```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
+Jack's mother was equally furious. "I thought I raised you better than this, Jack. You know how important it is to keep the peace between our families!"
 
-public class RightControllerInput : MonoBehaviour
-{
-    public XRController controller;
-    public XRNode inputSource;
-    
-    private void Update()
-    {
-        // Get input values from controller
-        bool gripButton = controller.inputDevice.IsPressed(InputHelpers.Button.Grip, out bool gripValue);
-        bool triggerButton = controller.inputDevice.IsPressed(InputHelpers.Button.Trigger, out float triggerValue);
-        bool primaryButton = controller.inputDevice.IsPressed(InputHelpers.Button.PrimaryButton, out bool primaryValue);
-        bool secondaryButton = controller.inputDevice.IsPressed(InputHelpers.Button.SecondaryButton, out bool secondaryValue);
-        bool primaryTouch = controller.inputDevice.IsPressed(InputHelpers.Button.PrimaryTouch, out bool primaryTouchValue);
-        bool secondaryTouch = controller.inputDevice.IsPressed(InputHelpers.Button.SecondaryTouch, out bool secondaryTouchValue);
-        bool thumbstickButton = controller.inputDevice.IsPressed(InputHelpers.Button.Thumbstick, out bool thumbstickValue);
-        Vector2 thumbstickAxis = Vector2.zero;
-        controller.inputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out thumbstickAxis);
-        
-        // Get battery level
-        controller.inputDevice.TryGetFeatureValue(CommonUsages BatteryLevel, out float batteryLevel);
-        
-        // Display input values
-        Debug.Log("Grip button: " + gripButton);
-        Debug.Log("Trigger button: " + triggerButton + ", value: " + triggerValue);
-        Debug.Log("Primary button: " + primaryButton);
-        Debug.Log("Secondary button: " + secondaryButton);
-        Debug.Log("Primary touch: " + primaryTouch);
-        Debug.Log("Secondary touch: " + secondaryTouch);
-        Debug.Log("Thumbstick button: " + thumbstickButton);
-        Debug.Log("Thumbstick axis: " + thumbstickAxis);
-        Debug.Log("Battery level: " + batteryLevel);
-    }
-}
-```
-You can attach this script to a game object in your scene and set the `controller` field to the right controller's `XRController` component. You can also set the `inputSource` field to `XRNode.RightHand` to ensure that the input values come from the correct controller.
+Isabella and Jack stood frozen, unsure of what to do or say. They knew they had been caught, and there was no escaping the consequences of their actions.
 
-To get input values from the left controller, you can create a similar script and set the `inputSource` field to `XRNode.LeftHand`.<|>
+Their families were unforgiving, and they were both punished severely. Isabella was grounded for a month, and Jack was forbidden from leaving the house for the same period of time. It seemed as though their relationship was doomed, and they could only hope that their love would be strong enough to survive the trials to come.<|>USER: Our story was "A princess and a pirate fall in love on a voyage across the sea, but their family are sworn enemies". 
 =============================
-<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> Sure, here's an example script that uses the XR Interaction Toolkit to get input values from the left controller on the Oculus Quest 2, as well as the headset and controller battery statuses:
-```csharp
-using UnityEngine;
-using UnityEngine.XR;
-using UnityEngine.XR.Interaction.Toolkit;
+<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> As Isabella was walking back home from the market one day, a group of men from Jack's family approached her. They taunted her about the feud between their families and threatened to harm her. Isabella was terrified and didn't know what to do.
 
-public class Quest2LeftInput : MonoBehaviour
-{
-    private InputDevice leftHandDevice;
-    private XRController leftHandController;
+Suddenly, Jack appeared out of nowhere and stepped in between Isabella and the men. He stood tall and confidently, despite the fact that he was outnumbered. Jack calmly told the men to leave Isabella alone and reminded them that she was innocent and had nothing to do with the feud.
 
-    private void Start()
-    {
-        // Get the left hand device
-        var leftHandDevices = new List<InputDevice>();
-        InputDevices.GetDevicesAtXRNode(XRNode.LeftHand, leftHandDevices);
-        if (leftHandDevices.Count == 1)
-        {
-            leftHandDevice = leftHandDevices[0];
-            leftHandController = GetComponent<XRController>();
-        }
-    }
+The men hesitated for a moment before finally backing down and leaving. Isabella was in awe of Jack's bravery and thanked him for saving her. Jack smiled at her and said that he couldn't stand by and let anything happen to her.
 
-    private void Update()
-    {
-        // Get input values
-        if (leftHandDevice!= null)
-        {
-            float gripValue;
-            if (leftHandDevice.TryGetFeatureValue(CommonUsages.grip, out gripValue))
-            {
-                // Grip value is between 0 and 1
-                Debug.Log("Left Grip Value: " + gripValue);
-            }
+From that moment on, Isabella saw Jack in a different light. She realized that there was more to him than just his family name and the feud between their families. She began to see him as a kind and brave man, and started to fall in love with him.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> Isabella and Jack had planned the perfect date. They had booked a table at the fanciest restaurant in town, and Jack had even rented a horse-drawn carriage to take them there. Isabella had spent hours getting ready, choosing the perfect dress and doing her hair and makeup.
 
-            float triggerValue;
-            if (leftHandDevice.TryGetFeatureValue(CommonUsages.trigger, out triggerValue))
-            {
-                // Trigger value is between 0 and 1
-                Debug.Log("Left Trigger Value: " + triggerValue);
-            }
+As they enjoyed their dinner, they laughed and talked about their hopes and dreams for the future. Isabella couldn't believe how easy it was to talk to Jack, and how comfortable she felt around him. She had never felt this way about anyone before.
 
-            bool primaryButtonValue;
-            if (leftHandDevice.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonValue))
-            {
-                Debug.Log("Left Primary Button Value: " + primaryButtonValue);
-            }
+But as they were leaving the restaurant, they saw their families waiting for them outside. Isabella's parents looked furious, and Jack's father was red-faced with anger. They had found out about the date and had come to put a stop to it.
 
-            bool secondaryButtonValue;
-            if (leftHandDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonValue))
-            {
-                Debug.Log("Left Secondary Button Value: " + secondaryButtonValue);
-            }
+Isabella's father stepped forward and grabbed her by the arm. "You will never see this boy again," he said sternly. "Our families have been enemies for generations, and we will not let you ruin everything we have worked for."
 
-            Vector2 joystickValue;
-            if (leftHandDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out joystickValue))
-            {
-                Debug.Log("Left Joystick Value: " + joystickValue);
-            }
-        }
+Jack tried to intervene, but Isabella's father pushed him away. "Stay away from my daughter," he spat. "You are not welcome here."
 
-        // Get battery status for the headset
-        float headsetBatteryLevel;
-        if (InputDevices.GetDeviceAtXRNode(XRNode.Head).TryGetFeatureValue(CommonUsages.batteryLevel, out headsetBatteryLevel))
-        {
-            Debug.Log("Headset Battery Level: " + headsetBatteryLevel);
-        }
+Isabella felt tears welling up in her eyes as she watched Jack walk away, his shoulders slumped in defeat. She knew that her father would never allow her to be with Jack, and she didn't know how she could go on without him.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> Isabella and Jack had been meeting secretly for weeks, unable to resist the pull of their growing feelings for each other despite the disapproval of their families. They had chosen a quiet spot in the park, hidden by the trees, and were lost in their own world as they talked and laughed together.
 
-        // Get battery status for the left controller
-        float leftControllerBatteryLevel;
-        if (leftHandDevice!= null && leftHandDevice.TryGetFeatureValue(CommonUsages.batteryLevel, out leftControllerBatteryLevel))
-        {
-            Debug.Log("Left Controller Battery Level: " + leftControllerBatteryLevel);
-        }
-    }
-}
-```
-This script uses the XR Interaction Toolkit to get input values from the left controller on the Oculus Quest 2, as well as the headset and controller battery statuses. The script gets the left hand device and controller, and then listens for input values for grip, trigger, primary button, secondary button, and joystick. It then logs those input values to the console.
+But as they were about to say their goodbyes, they heard the sound of footsteps approaching. Suddenly, Isabella's father appeared from behind a nearby tree, followed closely by Jack's mother. Both of them had fury in their eyes.
 
-The script also gets the battery levels for the headset and left controller, if they are available, and logs those to the console as well.
+"What is the meaning of this?" Isabella's father demanded, his voice booming. "I trusted you, Isabella, and you have betrayed me!"
 
-You can use this script as a starting point and create a similar script for the right controller. Make sure to attach the appropriate script to each controller object in your scene.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> Certainly! Here's an example script to get input values from the right Oculus Quest 2 controller and display them, using the XR Interaction Toolkit:
-```c#
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
+Jack's mother was equally furious. "I thought I raised you better than this, Jack. You know how important it is to keep the peace between our families!"
 
-public class RightControllerInput : MonoBehaviour
-{
-    public XRController controller;
-    public XRNode inputSource;
-    
-    private void Update()
-    {
-        // Get input values from controller
-        bool gripButton = controller.inputDevice.IsPressed(InputHelpers.Button.Grip, out bool gripValue);
-        bool triggerButton = controller.inputDevice.IsPressed(InputHelpers.Button.Trigger, out float triggerValue);
-        bool primaryButton = controller.inputDevice.IsPressed(InputHelpers.Button.PrimaryButton, out bool primaryValue);
-        bool secondaryButton = controller.inputDevice.IsPressed(InputHelpers.Button.SecondaryButton, out bool secondaryValue);
-        bool primaryTouch = controller.inputDevice.IsPressed(InputHelpers.Button.PrimaryTouch, out bool primaryTouchValue);
-        bool secondaryTouch = controller.inputDevice.IsPressed(InputHelpers.Button.SecondaryTouch, out bool secondaryTouchValue);
-        bool thumbstickButton = controller.inputDevice.IsPressed(InputHelpers.Button.Thumbstick, out bool thumbstickValue);
-        Vector2 thumbstickAxis = Vector2.zero;
-        controller.inputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out thumbstickAxis);
-        
-        // Get battery level
-        controller.inputDevice.TryGetFeatureValue(CommonUsages BatteryLevel, out float batteryLevel);
-        
-        // Display input values
-        Debug.Log("Grip button: " + gripButton);
-        Debug.Log("Trigger button: " + triggerButton + ", value: " + triggerValue);
-        Debug.Log("Primary button: " + primaryButton);
-        Debug.Log("Secondary button: " + secondaryButton);
-        Debug.Log("Primary touch: " + primaryTouch);
-        Debug.Log("Secondary touch: " + secondaryTouch);
-        Debug.Log("Thumbstick button: " + thumbstickButton);
-        Debug.Log("Thumbstick axis: " + thumbstickAxis);
-        Debug.Log("Battery level: " + batteryLevel);
-    }
-}
-```
-You can attach this script to a game object in your scene and set the `controller` field to the right controller's `XRController` component. You can also set the `inputSource` field to `XRNode.RightHand` to ensure that the input values come from the correct controller.
+Isabella and Jack stood frozen, unsure of what to do or say. They knew they had been caught, and there was no escaping the consequences of their actions.
 
-To get input values from the left controller, you can create a similar script and set the `inputSource` field to `XRNode.LeftHand`.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>
+Their families were unforgiving, and they were both punished severely. Isabella was grounded for a month, and Jack was forbidden from leaving the house for the same period of time. It seemed as though their relationship was doomed, and they could only hope that their love would be strong enough to survive the trials to come.<|>USER: Our story was "A princess and a pirate fall in love on a voyage across the sea, but their family are sworn enemies". <|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>

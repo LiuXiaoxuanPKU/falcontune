@@ -1,163 +1,563 @@
-A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. USER: Add tests ASSISTANT: Sure, here's an example of how you could write tests for the `UniqueList` class using the `unittest` module:
-```python
-import unittest
-from typing import List
+A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. USER: ok but add chrome.identity.getAuthToken({ interactive: true }, function (token) {
+ // Use the token to authenticate with the Gmail API
+ gapi.auth.setToken({ access\_token: token });
+}); function, gapi.auth.authorize(
+ {
+ client\_id:
+ "262510295601-g6p95m24qj6u2vt25rb3cb6dh8rgom9p.apps.googleusercontent.com",
+ scope: "https://www.googleapis.com/auth/gmail.readonly",
+ immediate: false,
+ },
+ callback
+ );
+} function, function initApiClient(callback) {
+ gapi.client.load("gmail", "v1", callback);
+} function ASSISTANT: Sure, here's the updated code with the added functions and OAuth client ID and scope:
+```javascript
+const CLIENT_ID = '262510295601-g6p95m24qj6u2vt25rb3cb6dh8rgom9p.apps.googleusercontent.com';
+const SCOPE = 'https://www.googleapis.com/auth/gmail.readonly';
 
-from unique_list import UniqueList
-class UniqueListTest(unittest.TestCase):
-    def test_init(self) -> None:
-        unique_list = UniqueList([1, 2, 3])
-        self.assertEqual(unique_list, [1, 2, 3])
+// Authorize the client with the Gmail API
+function authorize(callback) {
+  chrome.identity.getAuthToken({ interactive: true }, function (token) {
+    // Use the token to authenticate with the Gmail API
+    gapi.auth.setToken({ access_token: token });
+    gapi.auth.authorize({
+      client_id: CLIENT_ID,
+      scope: SCOPE,
+      immediate: false,
+    }, callback);
+  });
+}
 
-    def test_setitem(self) -> None:
-        unique_list = UniqueList([1, 2, 3])
-        unique_list[2] = 4
-        self.assertEqual(unique_list, [1, 2, 4])
-        with self.assertRaises(ValueError):
-            unique_list[1] = 4
+// Initialize the Gmail API client
+function initApiClient(callback) {
+  gapi.client.load('gmail', 'v1', callback);
+}
 
-    def test_setslice(self) -> None:
-        unique_list = UniqueList([1, 2, 3, 4, 5])
-        unique_list[1:4] = [6, 7]
-        self.assertEqual(unique_list, [1, 6, 7, 5])
-        with self.assertRaises(ValueError):
-            unique_list[1:3] = [7, 5]
+// Apply label to a list of message IDs
+function applyLabelToMessages(labelName, messageIds) {
+  const batch = gapi.client.newBatch();
+  messageIds.forEach(function(messageId) {
+    batch.add(gapi.client.gmail.users.messages.modify({
+      'userId': 'me',
+      'id': messageId,
+      'addLabelIds': [labelName]
+    }));
+  });
+  batch.execute();
+}
 
-    def test_delitem(self) -> None:
-        unique_list = UniqueList([1, 2, 3])
-        del unique_list[1]
-        self.assertEqual(unique_list, [1, 3])
+// Create a label with the given name
+function createLabel(labelName) {
+  const request = gapi.client.gmail.users.labels.create({
+    'userId': 'me',
+    'name': labelName,
+    'labelListVisibility': 'labelShow',
+    'messageListVisibility': 'show'
+  });
+  request.execute();
+}
 
-    def test_delslice(self)
-```<|>USER: Add declarative tests using pytest ASSISTANT: Sure, here's an example of how you could write declarative tests for the `UniqueList` class using the `pytest` module:
-```python
-from typing import List
+// Filter emails by most frequent sender
+function filterEmailsByMostFrequentSender() {
+  // Authorize the client with the Gmail API
+  authorize(function() {
+    // Initialize the Gmail API client
+    initApiClient(function() {
+      // Get all the messages in the user's inbox
+      const request = gapi.client.gmail.users.messages.list({
+        'userId': 'me',
+        'q': 'in:inbox'
+      });
 
-import pytest
+      // Process the response from the Gmail API
+      request.execute(function(response) {
+        if (response.messages) {
+          const messageIds = response.messages.map(function(message) {
+            return message.id;
+          });
 
-from unique_list import UniqueList
-def test_init() -> None:
-    unique_list = UniqueList([1, 2, 3])
-    assert unique_list == [1, 2, 3]
-def test_setitem() -> None:
-    unique_list = UniqueList([1, 2, 3])
-    unique_list[2] = 4
-    assert unique_list == [1, 2, 4]
-    with pytest.raises(ValueError):
-        unique_list[1] = 4
-def test_setslice() -> None:
-    unique_list = UniqueList([1, 2, 3, 4, 5])
-    unique_list[1:4] = [6, 7]
-    assert unique_list == [1, 6, 7, 5]
-    with pytest.raises(ValueError):
-        unique_list[1:3] = [7, 5]
-def test_delitem() -> None:
-    unique_list = UniqueList([1, 2, 3])
-    del unique_list[1]
-    assert unique_list == [1, 3]
-def test_delslice() -> None:
-    unique_list = UniqueList([1, 2, 3, 4, 5])
-    del unique_list[1:4]
-    assert unique_list == [1, 5]
-def test_append() -> None:
-    unique_list = UniqueList([1, 2, 3])
-    unique_list.append(4)
-    assert unique_list == [1, 2, 3, 4]
-    with pytest.raises(ValueError):
-        unique_list.append(3)
-def test_extend() -> None:
-    unique_list = UniqueList([1, 2, 3])
-    unique_list.extend([4, 5])
-    assert unique_list == [1, 2, 3, 4, 5]
-    with pytest.raises(ValueError):
-        unique_list.extend([3, 5])
-def test_insert() -> None:
-    unique_list = UniqueList([1, 2, 3])
-    unique_list.insert(2, 4)
-    assert unique_list == [1, 2, 4, 3]
-    with pytest.raises(ValueError):
-        unique_list.insert(1, 4)
-```
-In this implementation, we're using `pytest` as the testing framework and writing declarative tests using the `assert` statement. The `pytest.raises` context manager is used to check if a `ValueError` is raised when trying to add a duplicate value to the `UniqueList`.<|>
+          // Batch request to get the message details
+          const batch = gapi.client.newBatch();
+          messageIds.forEach(function(messageId) {
+            batch.add(gapi.client.gmail.users.messages.get({
+              'userId': 'me',
+              'id': messageId,
+              'format': 'metadata',
+              'metadataHeaders': ['From']
+            }));
+          });
+
+          // Process the response from the batch request
+          batch.execute(function(batchResponse) {
+            const senders = {};
+            for (const messageId in batchResponse) {
+              const headers = batchResponse[messageId].result.payload.headers;
+              for (const i in headers) {
+                if (headers[i].name === 'From') {
+                  const sender = headers[i].value;
+                  senders[sender] = senders[sender] + 1 || 1;
+                }
+              }
+            }
+
+            // Find the most frequent sender
+            let mostFrequentSender;
+            let highestCount = 0;
+            for (const sender in senders) {
+              if (senders[sender] > highestCount) {
+                mostFrequentSender = sender;
+                highestCount = senders[sender];
+              }
+            }
+
+            // Create a label for the most frequent sender if it doesn't already exist
+            const labelName = mostFrequentSender.replace(/<|>|\//g, '');
+            const labelsRequest = gapi.client.gmail.users.labels.list({
+              'userId
+```<|>USER: please add function autthorize, getauth token, function initApiClient to this code // OAuth client ID
+var CLIENT\_ID = 'YOUR\_CLIENT\_ID\_HERE';
+
+// OAuth scope
+var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
+
+// Get the user's email messages
+function getUserMessages(callback) {
+ // Use the Gmail API to get the user's email messages
+ var request = gapi.client.gmail.users.messages.list({
+ userId: 'me',
+ });
+ request.execute(callback);
+}
+
+// Parse the sender email from a message
+function parseSender(message) {
+ var headers = message.payload.headers;
+ for (var i = 0; i < headers.length; i++) {
+ if (headers[i].name === 'From') {
+ return headers[i].value;
+ }
+ }
+ return null;
+}
+
+// Create the label using the Gmail API
+function createLabel(callback) {
+ var labelObject = {
+ name: 'Filtered by Most Frequent Sender',
+ labelListVisibility: 'labelShow',
+ messageListVisibility: 'show',
+ };
+ var request = gapi.client.gmail.users.labels.create({
+ userId: 'me',
+ resource: labelObject,
+ });
+ request.execute(callback);
+}
+
+// Apply the label to the filtered emails using the Gmail API
+function applyLabelToMessages(messageIds) {
+ var resource = {
+ addLabelIds: [labelId],
+ };
+ var batch = gapi.client.newBatch();
+ for (var i = 0; i < messageIds.length; i++) {
+ var request = gapi.client.gmail.users.messages.modify({
+ userId: 'me',
+ id: messageIds[i],
+ resource: resource,
+ });
+ batch.add(request);
+ }
+ batch.execute();
+}
+
+// Analyze the user's inbox and identify the sender with the most emails
+function identifyMostFrequentSender(messages) {
+ var senderCounts = {};
+ var mostFrequentSender = null;
+ var mostFrequentCount = 0;
+ for (var i = 0; i < messages.length; i++) {
+ var sender = parseSender(messages[i]);
+ if (sender) {
+ if (!senderCounts[sender]) {
+ senderCounts[sender] = 0;
+ }
+ senderCounts[sender]++;
+ if (senderCounts[sender] > mostFrequentCount) {
+ mostFrequentCount = senderCounts[sender];
+ mostFrequentSender = sender;
+ }
+ }
+ }
+ return mostFrequentSender;
+}
+
+function filterEmailsByMostFrequentSender() {
+ // Get the user's email messages
+ getUserMessages(function (response) {
+ // Identify the sender with the most emails
+ var mostFrequentSender = identifyMostFrequentSender(response.messages);
+ if (mostFrequentSender) {
+ console.log('Most frequent sender:', mostFrequentSender);
+ // Create the label
+ createLabel(function (response) {
+ if (response.id) {
+ // Apply the label to the filtered emails
+ var request = gapi.client.gmail.users.messages.list({
+ userId: 'me',
+ q: 'from:' + mostFrequentSender,
+ maxResults: 100,
+ });
+ request.execute(function (response) {
+ var messages = response.messages || [];
+ var messageIds = [];
+ for (var i = 0; i < messages.length; i++) {
+ messageIds.push(messages[i].id);
+ }
+ applyLabelToMessages(messageIds);
+ console.log('Filtered messages:', messageIds);
+ });
+ } else {
+ console.log('Failed to create label.');
+ }
+ });
+ } else {
+ console.log(' ASSISTANT: Sure, here's the modified code with the `authorize`, `getAuthToken`, and `initApiClient` functions added:
+```scss
+// OAuth client ID
+var CLIENT_ID = 'YOUR_CLIENT_ID_HERE';
+
+// OAuth scope
+var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
+
+// Get the user's email messages
+function getUserMessages(callback) {
+  // Use the Gmail API to get the user's email messages
+  var request = gapi.client.gmail.users.messages.list({
+    userId: 'me',
+  });
+  request.execute(callback);
+}
+
+// Parse the sender email from a message
+function parseSender(message) {
+  var headers = message.payload.headers;
+  for (var i = 0; i < headers.length; i++) {
+    if (headers[i].name === 'From') {
+      return headers[i].value;
+    }
+  }
+  return null;
+}
+
+// Create the label using the Gmail API
+function createLabel(callback) {
+  var labelObject = {
+    name: 'Filtered by Most Frequent Sender',
+    labelListVisibility: 'labelShow',
+    messageListVisibility: 'show',
+  };
+  var request = gapi.client.gmail.users.labels.create({
+    userId: 'me',
+    resource: labelObject,
+  });
+  request.execute(callback);
+}
+
+// Apply the label to the filtered emails using the Gmail API
+function applyLabelToMessages(messageIds) {
+  var resource = {
+    addLabelIds: [labelId],
+  };
+  var batch = gapi.client.newBatch();
+  for (var i = 0; i < messageIds.length; i++) {
+    var request = gapi.client.gmail.users.messages.modify({
+      userId: 'me',
+      id: messageIds[i],
+      resource: resource,
+    });
+    batch.add(request);
+  }
+  batch.execute();
+}
+
+// Analyze the user's inbox and identify the sender with the most emails
+function identifyMostFrequentSender(messages) {
+  var senderCounts = {};
+  var mostFrequentSender = null;
+  var mostFrequentCount = 0;
+  for (var i = 0; i < messages.length; i++) {
+    var sender = parseSender(messages[i]);
+    if (sender) {
+      if (!senderCounts[sender]) {
+        senderCounts[sender] = 0;
+      }
+      senderCounts[sender]++;
+      if (senderCounts[sender] > mostFrequentCount) {
+        mostFrequentCount = senderCounts[sender];
+        mostFrequentSender = sender;
+      }
+    }
+  }
+  return mostFrequentSender;
+}
+
+function authorize(callback) {
+  gapi.auth.authorize(
+    {
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+      immediate: false,
+    },
+    callback
+  );
+}
+
+function getAuthToken(callback) {
+  chrome.identity.getAuthToken({ interactive: true }, function (token) {
+    // Use the token to authenticate with the Gmail API
+    gapi.auth.setToken({ access_token: token });
+    callback();
+  });
+}
+
+function initApiClient(callback) {
+  gapi.client.load("gmail", "v1", callback);
+}
+
+function filterEmailsByMostFrequentSender() {
+  getAuthToken(function () {
+    authorize(function () {
+      // Initialize the Gmail API client
+      initApiClient(function () {
+        // Get the user's email messages
+        getUserMessages(function (response) {
+          // Identify the sender with the most emails
+          var mostFrequentSender = identifyMostFrequentSender(response.messages);
+          if (mostFrequentSender) {
+            console.log('Most frequent sender:', mostFrequentSender);
+            // Create the label
+            createLabel(function (response) {
+              if (response.id)
+```<|>
 =============================
-<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> Sure, here's an example of how you could write tests for the `UniqueList` class using the `unittest` module:
-```python
-import unittest
-from typing import List
+<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> Use the Gmail API to get the user's email messages
+ var request = gapi.client.gmail.users.messages.list({
+ userId:'me',
+ });
+ request.execute(callback);
+}
 
-from unique_list import UniqueList
-class UniqueListTest(unittest.TestCase):
-    def test_init(self) -> None:
-        unique_list = UniqueList([1, 2, 3])
-        self.assertEqual(unique_list, [1, 2, 3])
+// Parse the sender email from a message
+function parseSender(message) {
+ var headers = message.payload.headers;
+ for (var i = 0; i < headers.length; i++) {
+ if (headers[i].name === 'From') {
+ return headers[i].value;
+ }
+ }
+ return null;
+}
 
-    def test_setitem(self) -> None:
-        unique_list = UniqueList([1, 2, 3])
-        unique_list[2] = 4
-        self.assertEqual(unique_list, [1, 2, 4])
-        with self.assertRaises(ValueError):
-            unique_list[1] = 4
+// Create the label using the Gmail API
+function createLabel(callback) {
+ var labelObject = {
+ name: 'Filtered by Most Frequent Sender',
+ labelListVisibility: 'labelShow',
+ messageListVisibility:'show',
+ };
+ var request = gapi.client.gmail.users.labels.create({
+ userId:'me',
+ resource: labelObject,
+ });
+ request.execute(callback);
+}
 
-    def test_setslice(self) -> None:
-        unique_list = UniqueList([1, 2, 3, 4, 5])
-        unique_list[1:4] = [6, 7]
-        self.assertEqual(unique_list, [1, 6, 7, 5])
-        with self.assertRaises(ValueError):
-            unique_list[1:3] = [7, 5]
+// Apply the label to the filtered emails using the Gmail API
+function applyLabelToMessages(messageIds) {
+ var resource = {
+ addLabelIds: [labelId],
+ };
+ var batch = gapi.client.newBatch();
+ for (var i = 0; i < messageIds.length; i++) {
+ var request = gapi.client.gmail.users.messages.modify({
+ userId:'me',
+ id: messageIds[i],
+ resource: resource,
+ });
+ batch.add(request);
+ }
+ batch.execute();
+}
 
-    def test_delitem(self) -> None:
-        unique_list = UniqueList([1, 2, 3])
-        del unique_list[1]
-        self.assertEqual(unique_list, [1, 3])
+// Analyze the user's inbox and identify the sender with the most emails
+function identifyMostFrequentSender(messages) {
+ var senderCounts = {};
+ var mostFrequentSender = null;
+ var mostFrequentCount = 0;
+ for (var i = 0; i < messages.length; i++) {
+ var sender = parseSender(messages[i]);
+ if (sender) {
+ if (!senderCounts[sender]) {
+ senderCounts[sender] = 0;
+ }
+ senderCounts[sender]++;
+ if (senderCounts[sender] > mostFrequentCount) {
+ mostFrequentCount = senderCounts[sender];
+ mostFrequentSender = sender;
+ }
+ }
+ }
+ return mostFrequentSender;
+}
 
-    def test_delslice(self)
-```<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> Sure, here's an example of how you could write declarative tests for the `UniqueList` class using the `pytest` module:
-```python
-from typing import List
+function filterEmailsByMostFrequentSender() {
+ // Get the user's email messages
+ getUserMessages(function (response) {
+ // Identify the sender with the most emails
+ var mostFrequentSender = identifyMostFrequentSender(response.messages);
+ if (mostFrequentSender) {
+ console.log('Most frequent sender:', mostFrequentSender);
+ // Create the label
+ createLabel(function (response) {
+ if (response.id) {
+ // Apply the label to the filtered emails
+ var request = gapi.client.gmail.users.messages.list({
+ userId:'me',
+ q: 'from:' + mostFrequentSender,
+ maxResults: 100,
+ });
+ request.execute(function (response) {
+ var messages = response.messages || [];
+ var messageIds = [];
+ for (var i = 0; i < messages.length; i++) {
+ messageIds.push(messages[i].id);
+ }
+ applyLabelToMessages(messageIds);
+ console.log('Filtered messages:', messageIds);
+ });
+ } else {
+ console.log('Failed to create label.');
+ }
+ });
+ } else {
+ console.log(' ASSISTANT: Sure, here's the modified code with the `authorize`, `getAuthToken`, and `initApiClient` functions added:
+```scss
+// OAuth client ID
+var CLIENT_ID = 'YOUR_CLIENT_ID_HERE';
 
-import pytest
+// OAuth scope
+var SCOPES = 'https://www.googleapis.com/auth/gmail.readonly';
 
-from unique_list import UniqueList
-def test_init() -> None:
-    unique_list = UniqueList([1, 2, 3])
-    assert unique_list == [1, 2, 3]
-def test_setitem() -> None:
-    unique_list = UniqueList([1, 2, 3])
-    unique_list[2] = 4
-    assert unique_list == [1, 2, 4]
-    with pytest.raises(ValueError):
-        unique_list[1] = 4
-def test_setslice() -> None:
-    unique_list = UniqueList([1, 2, 3, 4, 5])
-    unique_list[1:4] = [6, 7]
-    assert unique_list == [1, 6, 7, 5]
-    with pytest.raises(ValueError):
-        unique_list[1:3] = [7, 5]
-def test_delitem() -> None:
-    unique_list = UniqueList([1, 2, 3])
-    del unique_list[1]
-    assert unique_list == [1, 3]
-def test_delslice() -> None:
-    unique_list = UniqueList([1, 2, 3, 4, 5])
-    del unique_list[1:4]
-    assert unique_list == [1, 5]
-def test_append() -> None:
-    unique_list = UniqueList([1, 2, 3])
-    unique_list.append(4)
-    assert unique_list == [1, 2, 3, 4]
-    with pytest.raises(ValueError):
-        unique_list.append(3)
-def test_extend() -> None:
-    unique_list = UniqueList([1, 2, 3])
-    unique_list.extend([4, 5])
-    assert unique_list == [1, 2, 3, 4, 5]
-    with pytest.raises(ValueError):
-        unique_list.extend([3, 5])
-def test_insert() -> None:
-    unique_list = UniqueList([1, 2, 3])
-    unique_list.insert(2, 4)
-    assert unique_list == [1, 2, 4, 3]
-    with pytest.raises(ValueError):
-        unique_list.insert(1, 4)
-```
-In this implementation, we're using `pytest` as the testing framework and writing declarative tests using the `assert` statement. The `pytest.raises` context manager is used to check if a `ValueError` is raised when trying to add a duplicate value to the `UniqueList`.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>
+// Get the user's email messages
+function getUserMessages(callback) {
+  // Use the Gmail API to get the user's email messages
+  var request = gapi.client.gmail.users.messages.list({
+    userId:'me',
+  });
+  request.execute(callback);
+}
+
+// Parse the sender email from a message
+function parseSender(message) {
+  var headers = message.payload.headers;
+  for (var i = 0; i < headers.length; i++) {
+    if (headers[i].name === 'From') {
+      return headers[i].value;
+    }
+  }
+  return null;
+}
+
+// Create the label using the Gmail API
+function createLabel(callback) {
+  var labelObject = {
+    name: 'Filtered by Most Frequent Sender',
+    labelListVisibility: 'labelShow',
+    messageListVisibility:'show',
+  };
+  var request = gapi.client.gmail.users.labels.create({
+    userId:'me',
+    resource: labelObject,
+  });
+  request.execute(callback);
+}
+
+// Apply the label to the filtered emails using the Gmail API
+function applyLabelToMessages(messageIds) {
+  var resource = {
+    addLabelIds: [labelId],
+  };
+  var batch = gapi.client.newBatch();
+  for (var i = 0; i < messageIds.length; i++) {
+    var request = gapi.client.gmail.users.messages.modify({
+      userId:'me',
+      id: messageIds[i],
+      resource: resource,
+    });
+    batch.add(request);
+  }
+  batch.execute();
+}
+
+// Analyze the user's inbox and identify the sender with the most emails
+function identifyMostFrequentSender(messages) {
+  var senderCounts = {};
+  var mostFrequentSender = null;
+  var mostFrequentCount = 0;
+  for (var i = 0; i < messages.length; i++) {
+    var sender = parseSender(messages[i]);
+    if (sender) {
+      if (!senderCounts[sender]) {
+        senderCounts[sender] = 0;
+      }
+      senderCounts[sender]++;
+      if (senderCounts[sender] > mostFrequentCount) {
+        mostFrequentCount = senderCounts[sender];
+        mostFrequentSender = sender;
+      }
+    }
+  }
+  return mostFrequentSender;
+}
+
+function authorize(callback) {
+  gapi.auth.authorize(
+    {
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+      immediate: false,
+    },
+    callback
+  );
+}
+
+function getAuthToken(callback) {
+  chrome.identity.getAuthToken({ interactive: true }, function (token) {
+    // Use the token to authenticate with the Gmail API
+    gapi.auth.setToken({ access_token: token });
+    callback();
+  });
+}
+
+function initApiClient(callback) {
+  gapi.client.load("gmail", "v1", callback);
+}
+
+function filterEmailsByMostFrequentSender() {
+  getAuthToken(function () {
+    authorize(function () {
+      // Initialize the Gmail API client
+      initApiClient(function () {
+        // Get the user's email messages
+        getUserMessages(function (response) {
+          // Identify the sender with the most emails
+          var mostFrequentSender = identifyMostFrequentSender(response.messages);
+          if (mostFrequentSender) {
+            console.log('Most frequent sender:', mostFrequentSender);
+            // Create the label
+            createLabel(function (response) {
+              if (response.id)
+```<|>
