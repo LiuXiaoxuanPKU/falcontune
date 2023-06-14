@@ -4,6 +4,7 @@ from typing import Dict, Any
 import torch
 from datasets import Dataset, load_dataset
 from transformers.utils import logging
+import json
 
 logger = logging.get_logger("transformers")
 
@@ -182,93 +183,79 @@ class TrainShareGPT(TrainDataBase):
         super().__init__(dataset, val_set_size, tokenizer, cutoff_len)
     
     def tokenize(self, prompt: str, use_eos_token=True) -> Dict[str, Any]:
-        tokenized_prompt = self.tokenizer(
-            prompt,
-            truncation=True,
-            max_length=self.cutoff_len,
-            padding=False,
-            return_tensors=None,
-        )
-        if (
-            tokenized_prompt["input_ids"][-1] != self.tokenizer.eos_token_id
-            and len(tokenized_prompt["input_ids"]) < self.cutoff_len
-            and use_eos_token
-        ):
-            tokenized_prompt["input_ids"].append(self.tokenizer.eos_token_id)
-            tokenized_prompt["attention_mask"].append(1)
-        tokenized_prompt["labels"] = torch.tensor(tokenized_prompt["input_ids"])
-
-        if prompt == "IGNORE":
-            tokenized_prompt["labels"][:] = IGNORE_TOKEN_ID
-            return tokenized_prompt
-
-        # Mask targets
-        sep = " ASSISTANT: "
-
-        total_len = int(tokenized_prompt["labels"].ne(
-            self.tokenizer.pad_token_id).sum())
-
-        rounds = prompt.split("</s>")
-        cur_len = 0
-        tokenized_prompt["labels"][:cur_len] = IGNORE_TOKEN_ID
-        for i, rou in enumerate(rounds):
-            if rou == "":
-                break
-
-            rou += "</s>"
-            parts = rou.split(sep)
-            if len(parts) != 2:
-                break
-            parts[0] += sep
-            round_len = len(self.tokenizer(rou).input_ids)
-            instruction_len = len(self.tokenizer(parts[0]).input_ids)
-
-            tokenized_prompt["labels"][cur_len: cur_len +
-                                            instruction_len] = IGNORE_TOKEN_ID
-
-            cur_len += round_len
-        tokenized_prompt["labels"][cur_len:] = IGNORE_TOKEN_ID
-
-        if cur_len < self.cutoff_len:
-            if cur_len != total_len:
-                tokenized_prompt["labels"][:] = IGNORE_TOKEN_ID
-                print(
-                    f"WARNING: tokenization mismatch: {cur_len} vs. {total_len}."
-                    f" (ignored)"
-                )
-
-        return tokenized_prompt
+        pass
 
     def prepare_data(self, **kwargs) -> None:
-        data = load_dataset("json", data_files=self.dataset)
+        data = json.load(open(self.dataset, "r"))
+        print(data[0])
         
         self.val_data = None
         if self.val_set_size > 0:
             pass
         else:
-            self.train_data = data["train"].shuffle().map(lambda x: self.generate_and_tokenize_prompt(x))
+            sources = [example["conversations"] for example in data]
+            self.train_data = self.preprocess(sources)
             self.val_data = None
 
-        self.train_data = self.train_data.with_format("torch")
-
-    def generate_prompt(self, data_point):
-        return make_prompt(None, None, None, data_point["conversations"])
-    
-    def generate_and_tokenize_prompt(self, data_point):
-        prompt = self.generate_prompt(data_point)
-        tokenized_prompt = self.tokenize(prompt)
-        return tokenized_prompt
-
+    def preprocess(self, conversations):
+        conversations = [make_prompt(None, None, None,c) for c in conversations]
+        conversations = [c for c in conversations if c != "IGNORE"]
         
+        input_ids = self.tokenizer(
+            conversations,
+            return_tensors="pt",
+            padding="max_length",
+            max_length=self.cutoff_len,
+            truncation=True,
+        ).input_ids
+        targets = input_ids.clone()
+
+        # Mask targets
+        sep = " ASSISTANT: "
+        for conversation, target in zip(conversations, targets):
+            total_len = int(target.ne(self.tokenizer.pad_token_id).sum())
+
+            rounds = conversation.split("<|>")
+            cur_len = 0
+            for i, rou in enumerate(rounds):
+                if rou == "":
+                    break
+                parts = rou.split(sep)
+                if len(parts) != 2:
+                    break
+                round_len = len(self.tokenizer(rou).input_ids) + 1
+                parts[0] += sep
+                instruction_len = len(self.tokenizer(parts[0]).input_ids) - 1
+                target[cur_len : cur_len + instruction_len] = IGNORE_TOKEN_ID
+                cur_len += round_len 
+            
+            if False:
+                print(conversation)
+                print("=============================")
+                z = target.clone()
+                z = torch.where(z == IGNORE_TOKEN_ID, self.tokenizer.pad_token_id, z)
+                print(self.tokenizer.decode(z))
+                exit(0)
+            
+            if cur_len < self.tokenizer.model_max_length:
+                if cur_len != total_len:
+                    target[:] = IGNORE_TOKEN_ID
+                    print(
+                        f"WARNING: tokenization mismatch: {cur_len} vs. {total_len}."
+                        f" (ignored)"
+                    )
+
+        return dict(
+            input_ids=input_ids,
+            labels=targets,
+            attention_mask=input_ids.ne(self.tokenizer.pad_token_id),
+        )
     
 def make_prompt(instruction, input_, output="", conversation=[], type="shareGPT"):
     if type == "shareGPT":
         # returns the full prompt
         if len(conversation) > 0 and conversation[0]['from'] != 'human':
                 conversation = conversation[1:]
-
-        if len(conversation) > 0 and conversation[0]['from'] != 'human':
-            return "IGNORE"
 
         if len(conversation) == 0:
             return "IGNORE"
@@ -278,11 +265,11 @@ def make_prompt(instruction, input_, output="", conversation=[], type="shareGPT"
             if i % 2 == 0:
                 if e['from'] != 'human':
                     return "IGNORE"
-                joined_conversation += f"USER: {e['value']} "
+                joined_conversation += f"USER: {e['value']}" + " "
             else:
                 if e['from'] != 'gpt':
                     return "IGNORE"
-                joined_conversation += f"ASSISTANT: {e['value']}</s>"
+                joined_conversation += f"ASSISTANT: {e['value']}" + "<|>"
 
         instruction = "A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. "
         return f"{instruction}{joined_conversation}"
