@@ -10,6 +10,7 @@ from falcontune.data import load_data
 from falcontune.model import load_model
 from falcontune.model.lora import load_adapter
 from falcontune.model.utils import model_to_half
+from falcontune.model.utils import LogMemoryCallback
 
 logger = logging.get_logger("transformers")
 
@@ -138,6 +139,7 @@ def finetune(args):
             eval_dataset=data.val_data,
             args=training_arguments,
             data_collator=transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False),
+            # callbacks=[LogMemoryCallback]
         )
         model.config.use_cache = False
 
