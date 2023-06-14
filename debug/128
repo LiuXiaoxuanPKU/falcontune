@@ -1,0 +1,175 @@
+A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. USER: How do I set it to allow all tags and all attributes? ASSISTANT: If you want to allow all tags and all attributes in the sanitized HTML, you can configure `sanitize-html` to use the `allowedTags` and `allowedAttributes` options with a value of `true`.
+
+Here's an example:
+```javascript
+const sanitizeHtml = require('sanitize-html');
+
+const html = '<div><script>alert("Hello!");</script><p>Hello, world!</p></div>';
+
+const options = {
+  allowedTags: true, // allow all tags
+  allowedAttributes: true, // allow all attributes
+};
+
+const sanitizedHtml = sanitizeHtml(html, options);
+
+console.log(sanitizedHtml); // <div><script>alert("Hello!");</script><p>Hello, world!</p></div>
+```
+In this example, the `allowedTags` and `allowedAttributes` options are set to `true`, which means that all tags and attributes are allowed in the sanitized HTML.
+
+This configuration can be useful in some cases, such as when you need to<|>USER: How do I allow all tags apart from script tags? ASSISTANT: If you want to allow all tags in the HTML except for the `<script>` tag, you can configure `sanitize-html` to use the `allowedTags` option with an array of tags that you want to allow, and exclude the `<script>` tag from that array.
+
+Here's an example:
+```javascript
+const sanitizeHtml = require('sanitize-html');
+
+const html = '<div><script>alert("Hello!");</script><p>Hello, world!</p></div>';
+
+const options = {
+  allowedTags: ['*'], // allow all tags
+  disallowedTagsMode: 'recursiveEscape',
+  exclusiveFilter: function (frame) {
+    return !['script'].includes(frame.tag);
+  }
+};
+
+const sanitizedHtml = sanitizeHtml(html, options);
+
+console.log(sanitizedHtml); // <div>&lt;script&gt;alert("Hello!");&lt;/script&gt;<p>Hello, world!</p></div>
+```
+In this example, the `allowedTags` option is set to an array containing the value `'*'`, which means that all tags are allowed. However, we also set the `disallowedTagsMode` option to `'recursiveEscape'`, which tells `sanitize-html` to escape any disallowed tags instead of removing them.
+
+We then define an `exclusiveFilter` function that checks whether a given tag should be allowed or disallowed. In this case, we use the `includes()` method to check whether the tag is in the list of disallowed tags (`['script']`), and return `false` if it is, and `true` otherwise.
+
+With these options set, `sanitize-html` will allow all tags except for the `<script>` tag, which will be escaped instead of removed.<|>USER: What does escaping mean? ASSISTANT: In HTML, escaping means replacing certain characters with their corresponding character entities. This is done to prevent these characters from being interpreted as part of the HTML markup or code, which could potentially cause security vulnerabilities or incorrect rendering of the page.
+
+For example, the less-than symbol (`<`) is a special character in HTML that is used to indicate the start of an HTML tag. If you want to include a less-than symbol as part of your page content, you need to escape it as `&lt;`. Similarly, the ampersand symbol (`&`) is used to denote special character entities in HTML, so if you want to include an ampersand symbol as part of your page content, you need to escape it as `&amp;`.
+
+When `sanitize-html` escapes a tag or attribute, it replaces any special characters with their corresponding character entities. This ensures that the HTML markup is safe and correctly rendered by the browser, while still preserving the original content and structure of the HTML.
+
+For example, if you have the following HTML:
+```html
+<div><script>alert("Hello!");</script><p>Hello, world!</p></div>
+```
+And you use `sanitize-html` to sanitize it with the options I mentioned earlier, the resulting HTML would be:
+```html
+<div>&lt;script&gt;alert("Hello!");&lt;/script&gt;<p>Hello, world!</p></div>
+```
+In this example, the `<script>` tag has been escaped as `&lt;script&gt;`, which prevents it from being interpreted as part of the HTML markup or executed as JavaScript code.<|>USER: Turn these strings into a JS array of strings:
+
+bg-black mb-4 rounded-md flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans flex ml-auto gap-2 ASSISTANT: To turn the string `"bg-black mb-4 rounded-md flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans flex ml-auto gap-2"` into a JavaScript array of strings, you can use the `split()` method, which splits a string into an array of substrings based on a specified separator. In this case, you can split the string at each space character to get an array of individual classes:
+```rust
+const str
+```<|>USER: No just show me the end result ASSISTANT: Sure! Here's the end result of turning the string `"bg-black mb-4 rounded-md flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans flex ml-auto gap-2"` into a JavaScript array of strings:
+```js
+const classes = [
+  "bg-black",
+  "mb-4",
+  "rounded-md",
+  "flex",
+  "items-center",
+  "relative",
+  "text-gray-200",
+  "bg-gray-800",
+  "px-4",
+  "py-2",
+  "text-xs",
+  "font-sans",
+  "flex",
+  "ml-auto",
+  "gap-2"
+];
+```
+You can create this array using the following code:
+```js
+const str = "bg-black mb-4 rounded-md flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans flex ml-auto gap-2";
+const classes = str.split(" ");
+```
+In this code, we use the `split()` method to split the string `str` at each space character, creating an array of individual classes. We then assign this array to the variable `classes`.<|>
+=============================
+<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> If you want to allow all tags and all attributes in the sanitized HTML, you can configure `sanitize-html` to use the `allowedTags` and `allowedAttributes` options with a value of `true`.
+
+Here's an example:
+```javascript
+const sanitizeHtml = require('sanitize-html');
+
+const html = '<div><script>alert("Hello!");</script><p>Hello, world!</p></div>';
+
+const options = {
+  allowedTags: true, // allow all tags
+  allowedAttributes: true, // allow all attributes
+};
+
+const sanitizedHtml = sanitizeHtml(html, options);
+
+console.log(sanitizedHtml); // <div><script>alert("Hello!");</script><p>Hello, world!</p></div>
+```
+In this example, the `allowedTags` and `allowedAttributes` options are set to `true`, which means that all tags and attributes are allowed in the sanitized HTML.
+
+This configuration can be useful in some cases, such as when you need to<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> If you want to allow all tags in the HTML except for the `<script>` tag, you can configure `sanitize-html` to use the `allowedTags` option with an array of tags that you want to allow, and exclude the `<script>` tag from that array.
+
+Here's an example:
+```javascript
+const sanitizeHtml = require('sanitize-html');
+
+const html = '<div><script>alert("Hello!");</script><p>Hello, world!</p></div>';
+
+const options = {
+  allowedTags: ['*'], // allow all tags
+  disallowedTagsMode:'recursiveEscape',
+  exclusiveFilter: function (frame) {
+    return!['script'].includes(frame.tag);
+  }
+};
+
+const sanitizedHtml = sanitizeHtml(html, options);
+
+console.log(sanitizedHtml); // <div>&lt;script&gt;alert("Hello!");&lt;/script&gt;<p>Hello, world!</p></div>
+```
+In this example, the `allowedTags` option is set to an array containing the value `'*'`, which means that all tags are allowed. However, we also set the `disallowedTagsMode` option to `'recursiveEscape'`, which tells `sanitize-html` to escape any disallowed tags instead of removing them.
+
+We then define an `exclusiveFilter` function that checks whether a given tag should be allowed or disallowed. In this case, we use the `includes()` method to check whether the tag is in the list of disallowed tags (`['script']`), and return `false` if it is, and `true` otherwise.
+
+With these options set, `sanitize-html` will allow all tags except for the `<script>` tag, which will be escaped instead of removed.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> In HTML, escaping means replacing certain characters with their corresponding character entities. This is done to prevent these characters from being interpreted as part of the HTML markup or code, which could potentially cause security vulnerabilities or incorrect rendering of the page.
+
+For example, the less-than symbol (`<`) is a special character in HTML that is used to indicate the start of an HTML tag. If you want to include a less-than symbol as part of your page content, you need to escape it as `&lt;`. Similarly, the ampersand symbol (`&`) is used to denote special character entities in HTML, so if you want to include an ampersand symbol as part of your page content, you need to escape it as `&amp;`.
+
+When `sanitize-html` escapes a tag or attribute, it replaces any special characters with their corresponding character entities. This ensures that the HTML markup is safe and correctly rendered by the browser, while still preserving the original content and structure of the HTML.
+
+For example, if you have the following HTML:
+```html
+<div><script>alert("Hello!");</script><p>Hello, world!</p></div>
+```
+And you use `sanitize-html` to sanitize it with the options I mentioned earlier, the resulting HTML would be:
+```html
+<div>&lt;script&gt;alert("Hello!");&lt;/script&gt;<p>Hello, world!</p></div>
+```
+In this example, the `<script>` tag has been escaped as `&lt;script&gt;`, which prevents it from being interpreted as part of the HTML markup or executed as JavaScript code.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> To turn the string `"bg-black mb-4 rounded-md flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans flex ml-auto gap-2"` into a JavaScript array of strings, you can use the `split()` method, which splits a string into an array of substrings based on a specified separator. In this case, you can split the string at each space character to get an array of individual classes:
+```rust
+const str
+```<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> Sure! Here's the end result of turning the string `"bg-black mb-4 rounded-md flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans flex ml-auto gap-2"` into a JavaScript array of strings:
+```js
+const classes = [
+  "bg-black",
+  "mb-4",
+  "rounded-md",
+  "flex",
+  "items-center",
+  "relative",
+  "text-gray-200",
+  "bg-gray-800",
+  "px-4",
+  "py-2",
+  "text-xs",
+  "font-sans",
+  "flex",
+  "ml-auto",
+  "gap-2"
+];
+```
+You can create this array using the following code:
+```js
+const str = "bg-black mb-4 rounded-md flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans flex ml-auto gap-2";
+const classes = str.split(" ");
+```
+In this code, we use the `split()` method to split the string `str` at each space character, creating an array of individual classes. We then assign this array to the variable `classes`.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>

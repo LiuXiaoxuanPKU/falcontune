@@ -1,0 +1,251 @@
+A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. USER: write me a input script for the quest 2 controllers, i need all input values so i can display them or use them, using xr interaction toolkit include headset and controller battery statuses each controller and headset get their own script write left script first ASSISTANT: Sure, here's an example script that uses the XR Interaction Toolkit to get input values from the left controller on the Oculus Quest 2, as well as the headset and controller battery statuses:
+```csharp
+using UnityEngine;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit;
+
+public class Quest2LeftInput : MonoBehaviour
+{
+    private InputDevice leftHandDevice;
+    private XRController leftHandController;
+
+    private void Start()
+    {
+        // Get the left hand device
+        var leftHandDevices = new List<InputDevice>();
+        InputDevices.GetDevicesAtXRNode(XRNode.LeftHand, leftHandDevices);
+        if (leftHandDevices.Count == 1)
+        {
+            leftHandDevice = leftHandDevices[0];
+            leftHandController = GetComponent<XRController>();
+        }
+    }
+
+    private void Update()
+    {
+        // Get input values
+        if (leftHandDevice != null)
+        {
+            float gripValue;
+            if (leftHandDevice.TryGetFeatureValue(CommonUsages.grip, out gripValue))
+            {
+                // Grip value is between 0 and 1
+                Debug.Log("Left Grip Value: " + gripValue);
+            }
+
+            float triggerValue;
+            if (leftHandDevice.TryGetFeatureValue(CommonUsages.trigger, out triggerValue))
+            {
+                // Trigger value is between 0 and 1
+                Debug.Log("Left Trigger Value: " + triggerValue);
+            }
+
+            bool primaryButtonValue;
+            if (leftHandDevice.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonValue))
+            {
+                Debug.Log("Left Primary Button Value: " + primaryButtonValue);
+            }
+
+            bool secondaryButtonValue;
+            if (leftHandDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonValue))
+            {
+                Debug.Log("Left Secondary Button Value: " + secondaryButtonValue);
+            }
+
+            Vector2 joystickValue;
+            if (leftHandDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out joystickValue))
+            {
+                Debug.Log("Left Joystick Value: " + joystickValue);
+            }
+        }
+
+        // Get battery status for the headset
+        float headsetBatteryLevel;
+        if (InputDevices.GetDeviceAtXRNode(XRNode.Head).TryGetFeatureValue(CommonUsages.batteryLevel, out headsetBatteryLevel))
+        {
+            Debug.Log("Headset Battery Level: " + headsetBatteryLevel);
+        }
+
+        // Get battery status for the left controller
+        float leftControllerBatteryLevel;
+        if (leftHandDevice != null && leftHandDevice.TryGetFeatureValue(CommonUsages.batteryLevel, out leftControllerBatteryLevel))
+        {
+            Debug.Log("Left Controller Battery Level: " + leftControllerBatteryLevel);
+        }
+    }
+}
+```
+This script uses the XR Interaction Toolkit to get input values from the left controller on the Oculus Quest 2, as well as the headset and controller battery statuses. The script gets the left hand device and controller, and then listens for input values for grip, trigger, primary button, secondary button, and joystick. It then logs those input values to the console.
+
+The script also gets the battery levels for the headset and left controller, if they are available, and logs those to the console as well.
+
+You can use this script as a starting point and create a similar script for the right controller. Make sure to attach the appropriate script to each controller object in your scene.<|>USER: now right script ASSISTANT: Certainly! Here's an example script to get input values from the right Oculus Quest 2 controller and display them, using the XR Interaction Toolkit:
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+
+public class RightControllerInput : MonoBehaviour
+{
+    public XRController controller;
+    public XRNode inputSource;
+    
+    private void Update()
+    {
+        // Get input values from controller
+        bool gripButton = controller.inputDevice.IsPressed(InputHelpers.Button.Grip, out bool gripValue);
+        bool triggerButton = controller.inputDevice.IsPressed(InputHelpers.Button.Trigger, out float triggerValue);
+        bool primaryButton = controller.inputDevice.IsPressed(InputHelpers.Button.PrimaryButton, out bool primaryValue);
+        bool secondaryButton = controller.inputDevice.IsPressed(InputHelpers.Button.SecondaryButton, out bool secondaryValue);
+        bool primaryTouch = controller.inputDevice.IsPressed(InputHelpers.Button.PrimaryTouch, out bool primaryTouchValue);
+        bool secondaryTouch = controller.inputDevice.IsPressed(InputHelpers.Button.SecondaryTouch, out bool secondaryTouchValue);
+        bool thumbstickButton = controller.inputDevice.IsPressed(InputHelpers.Button.Thumbstick, out bool thumbstickValue);
+        Vector2 thumbstickAxis = Vector2.zero;
+        controller.inputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out thumbstickAxis);
+        
+        // Get battery level
+        controller.inputDevice.TryGetFeatureValue(CommonUsages BatteryLevel, out float batteryLevel);
+        
+        // Display input values
+        Debug.Log("Grip button: " + gripButton);
+        Debug.Log("Trigger button: " + triggerButton + ", value: " + triggerValue);
+        Debug.Log("Primary button: " + primaryButton);
+        Debug.Log("Secondary button: " + secondaryButton);
+        Debug.Log("Primary touch: " + primaryTouch);
+        Debug.Log("Secondary touch: " + secondaryTouch);
+        Debug.Log("Thumbstick button: " + thumbstickButton);
+        Debug.Log("Thumbstick axis: " + thumbstickAxis);
+        Debug.Log("Battery level: " + batteryLevel);
+    }
+}
+```
+You can attach this script to a game object in your scene and set the `controller` field to the right controller's `XRController` component. You can also set the `inputSource` field to `XRNode.RightHand` to ensure that the input values come from the correct controller.
+
+To get input values from the left controller, you can create a similar script and set the `inputSource` field to `XRNode.LeftHand`.<|>
+=============================
+<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> Sure, here's an example script that uses the XR Interaction Toolkit to get input values from the left controller on the Oculus Quest 2, as well as the headset and controller battery statuses:
+```csharp
+using UnityEngine;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit;
+
+public class Quest2LeftInput : MonoBehaviour
+{
+    private InputDevice leftHandDevice;
+    private XRController leftHandController;
+
+    private void Start()
+    {
+        // Get the left hand device
+        var leftHandDevices = new List<InputDevice>();
+        InputDevices.GetDevicesAtXRNode(XRNode.LeftHand, leftHandDevices);
+        if (leftHandDevices.Count == 1)
+        {
+            leftHandDevice = leftHandDevices[0];
+            leftHandController = GetComponent<XRController>();
+        }
+    }
+
+    private void Update()
+    {
+        // Get input values
+        if (leftHandDevice!= null)
+        {
+            float gripValue;
+            if (leftHandDevice.TryGetFeatureValue(CommonUsages.grip, out gripValue))
+            {
+                // Grip value is between 0 and 1
+                Debug.Log("Left Grip Value: " + gripValue);
+            }
+
+            float triggerValue;
+            if (leftHandDevice.TryGetFeatureValue(CommonUsages.trigger, out triggerValue))
+            {
+                // Trigger value is between 0 and 1
+                Debug.Log("Left Trigger Value: " + triggerValue);
+            }
+
+            bool primaryButtonValue;
+            if (leftHandDevice.TryGetFeatureValue(CommonUsages.primaryButton, out primaryButtonValue))
+            {
+                Debug.Log("Left Primary Button Value: " + primaryButtonValue);
+            }
+
+            bool secondaryButtonValue;
+            if (leftHandDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out secondaryButtonValue))
+            {
+                Debug.Log("Left Secondary Button Value: " + secondaryButtonValue);
+            }
+
+            Vector2 joystickValue;
+            if (leftHandDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out joystickValue))
+            {
+                Debug.Log("Left Joystick Value: " + joystickValue);
+            }
+        }
+
+        // Get battery status for the headset
+        float headsetBatteryLevel;
+        if (InputDevices.GetDeviceAtXRNode(XRNode.Head).TryGetFeatureValue(CommonUsages.batteryLevel, out headsetBatteryLevel))
+        {
+            Debug.Log("Headset Battery Level: " + headsetBatteryLevel);
+        }
+
+        // Get battery status for the left controller
+        float leftControllerBatteryLevel;
+        if (leftHandDevice!= null && leftHandDevice.TryGetFeatureValue(CommonUsages.batteryLevel, out leftControllerBatteryLevel))
+        {
+            Debug.Log("Left Controller Battery Level: " + leftControllerBatteryLevel);
+        }
+    }
+}
+```
+This script uses the XR Interaction Toolkit to get input values from the left controller on the Oculus Quest 2, as well as the headset and controller battery statuses. The script gets the left hand device and controller, and then listens for input values for grip, trigger, primary button, secondary button, and joystick. It then logs those input values to the console.
+
+The script also gets the battery levels for the headset and left controller, if they are available, and logs those to the console as well.
+
+You can use this script as a starting point and create a similar script for the right controller. Make sure to attach the appropriate script to each controller object in your scene.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> Certainly! Here's an example script to get input values from the right Oculus Quest 2 controller and display them, using the XR Interaction Toolkit:
+```c#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+
+public class RightControllerInput : MonoBehaviour
+{
+    public XRController controller;
+    public XRNode inputSource;
+    
+    private void Update()
+    {
+        // Get input values from controller
+        bool gripButton = controller.inputDevice.IsPressed(InputHelpers.Button.Grip, out bool gripValue);
+        bool triggerButton = controller.inputDevice.IsPressed(InputHelpers.Button.Trigger, out float triggerValue);
+        bool primaryButton = controller.inputDevice.IsPressed(InputHelpers.Button.PrimaryButton, out bool primaryValue);
+        bool secondaryButton = controller.inputDevice.IsPressed(InputHelpers.Button.SecondaryButton, out bool secondaryValue);
+        bool primaryTouch = controller.inputDevice.IsPressed(InputHelpers.Button.PrimaryTouch, out bool primaryTouchValue);
+        bool secondaryTouch = controller.inputDevice.IsPressed(InputHelpers.Button.SecondaryTouch, out bool secondaryTouchValue);
+        bool thumbstickButton = controller.inputDevice.IsPressed(InputHelpers.Button.Thumbstick, out bool thumbstickValue);
+        Vector2 thumbstickAxis = Vector2.zero;
+        controller.inputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out thumbstickAxis);
+        
+        // Get battery level
+        controller.inputDevice.TryGetFeatureValue(CommonUsages BatteryLevel, out float batteryLevel);
+        
+        // Display input values
+        Debug.Log("Grip button: " + gripButton);
+        Debug.Log("Trigger button: " + triggerButton + ", value: " + triggerValue);
+        Debug.Log("Primary button: " + primaryButton);
+        Debug.Log("Secondary button: " + secondaryButton);
+        Debug.Log("Primary touch: " + primaryTouch);
+        Debug.Log("Secondary touch: " + secondaryTouch);
+        Debug.Log("Thumbstick button: " + thumbstickButton);
+        Debug.Log("Thumbstick axis: " + thumbstickAxis);
+        Debug.Log("Battery level: " + batteryLevel);
+    }
+}
+```
+You can attach this script to a game object in your scene and set the `controller` field to the right controller's `XRController` component. You can also set the `inputSource` field to `XRNode.RightHand` to ensure that the input values come from the correct controller.
+
+To get input values from the left controller, you can create a similar script and set the `inputSource` field to `XRNode.LeftHand`.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>

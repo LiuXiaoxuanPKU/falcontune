@@ -1,0 +1,207 @@
+A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. USER: How can I make it so, that it's like def process\_performer\_image(self, performer, tag\_names):
+ performer\_id = performer[0] # Initialize performer\_id here
+ performer\_name = performer[1]
+ tags = self.findPerformersTagsbyID(performer\_name)
+ self.check\_tags\_not\_empty(tags)
+ for tag in tags:
+ self.check\_tag\_in\_tag\_names(tag, tag\_names)
+ self.check\_performer\_tagged\_once(tags, tag\_names) ASSISTANT: You can use python's built-in `any()` function to check if any of the `tags` are in `tag_names`. You can replace the for loop with the following:
+```lua
+if any(tag in tag_names for tag in tags):
+    for tag in tags:
+        self.check_performer_tagged_once(tags, tag_names)
+        tag = tag.replace("Upscale ", "")
+        scale_setting = get_scale_setting(tag)
+        if not scale_setting:
+            self.debug("No scale setting in tags, Removing tag: "+tag)
+        scale_value = scale_setting.value
+        mode_setting = get_mode_setting(tag)
+        if not mode_setting:
+            self.debug("No mode setting in tags, Removing tag: "+tag)
+        mode_value = mode_setting.value
+        performer_id = performer[1]
+        image_path = performer[0]
+        self.error("image_path: "+image_path)
+        self.error("performer_id: "+performer_id)
+        self.error("scale_setting: "+scale_setting)
+        self.error("scale_value: "+scale_value)
+        self.error("mode_setting: "+mode_setting)
+        self.error("mode_value: "+mode_value)
+        self.processPerformerImage(image_path, performer_id, scale_setting, scale_value, mode_setting, mode_value)
+```
+This will check if any of the `tags` are in `tag_names` before running the for loop, and if any are, it will then proceed to check each `tag` against `tags` and `tag_names`.<|>USER: How can I make it so, that it's like 
+ def process\_performer\_image(self, performer, tag\_names): 
+ performer\_id = performer[0] # Initialize performer\_id here
+ performer\_name = performer[1]
+ tags = self.findPerformersTagsbyID(performer\_name)
+ self.check\_tag\_in\_tag\_names(tags, tag\_names)
+ self.check\_tags\_not\_empty(tags)
+ for tag in tags:
+ self.check\_performer\_tagged\_once(tags, tag\_names) with def check\_tag\_in\_tag\_names(self, tag, tag\_names):
+ if tag not in tag\_names:
+ raise ValueError(f"tag: '{tag}' is not in tag\_names")
+ return True.
+
+So if self.check\_tag\_in\_tag\_names(tags, tag\_names) returns false it skips that permormer and executes the next performer in def process\_performer\_image(self, performer, tag\_names): ASSISTANT: You can make the following changes to your code:
+
+1. Change the function signature of `check_tag_in_tag_names` to accept a list of tags instead of a single tag.
+```python
+def check_tag_in_tag_names(self, tags, tag_names):
+```
+2. Inside the function, use a for loop to iterate through the `tags` list and check if any tag is not in `tag_names`. If so, return False.
+```python
+    for tag in tags:
+        if tag not in tag_names:
+            return False
+    return True
+```
+3. In the `process_performer_image` function, call the `check_tag_in_tag_names` function before the for loop and if the function returns false, use the `continue` statement to move on to the next performer.
+```python
+    if not self.check_tag_in_tag_names(tags, tag_names):
+        continue
+```
+So the modified code would look something like this:
+```python
+def process_performer_image(self, performer, tag_names): 
+    performer_id = performer[0]  # Initialize performer_id here
+    performer_name = performer[1]
+    tags = self.findPerformersTagsbyID(performer_name)
+    if not self.check_tag_in_tag_names(tags, tag_names):
+        continue
+    self.check_tags_not_empty(tags)
+    for tag in tags:
+        self.check_performer_tagged_once(tags, tag_names)
+
+def check_tag_in_tag_names(self, tags, tag_names):
+    for tag in tags:
+        if tag not in tag_names:
+            return False
+    return True
+```<|>USER: I'm getting time="2023-01-13 13:23:26" level=error msg="[Plugin / Upscale Performer images] File \"B:\\Stash\\plugins\\Performer\_Image\_Gigapixel\\upscale.py\", line 565"
+time="2023-01-13 13:23:26" level=error msg="[Plugin / Upscale Performer images] continue"
+time="2023-01-13 13:23:26" level=error msg="[Plugin / Upscale Performer images] ^^^^^^^^"
+time="2023-01-13 13:23:26" level=error msg="[Plugin / Upscale Performer images] SyntaxError: 'continue' not properly in loop"
+time="2023-01-13 13:23:26" level=error msg="Plugin returned error: exit status 1"
+ for def process\_performer\_image(self, performer, tag\_names): 
+ performer\_id = performer[0] # Initialize performer\_id here
+ performer\_name = performer[1]
+ tags = self.findPerformersTagsbyID(performer\_name)
+ if not self.check\_tag\_in\_tag\_names(tags, tag\_names):
+ continue
+ self.check\_tags\_not\_empty(tags)
+ for tag in tags:
+ self.check\_performer\_tagged\_once(tags, tag\_names)
+ tag = tag.replace("Upscale ", "")
+ scale\_setting = get\_scale\_setting(tag)
+ if not scale\_setting:
+ self.debug("No scale setting in tags, Removing tag: "+tag)
+ scale\_value = scale\_setting.value
+ mode\_setting = get\_mode\_setting(tag)
+ if not mode\_setting: ASSISTANT: It seems like you are trying to use the `continue` statement outside of a loop. The `continue` statement is used to skip the current iteration of a loop and move on to the next iteration. In your code, it appears that you are trying to use `continue` outside of a loop, which is causing a syntax error.
+
+You can try modifying your code to use a loop, such as a for loop, and then use the `continue` statement inside the loop to skip the current iteration.
+
+If you want to skip the current performer, you can add an `if` statement that checks if the performer's tags are not in tag\_names and then return or continue to the next performer.
+```scss
+    def process_performer_image(self, performer, tag_names): 
+        performer_id = performer[0]  # Initialize performer_id here
+        performer_name = performer[1]
+        tags = self.findPerformersTagsbyID(performer_name)
+        if not set(tags).intersection(tag_names):
+            return
+        self.check_tags_not_empty(tags)
+        for tag in tags:
+            self.check_performer_tagged_once(tags, tag_names)
+            tag = tag.replace("Upscale ", "")
+            scale_setting = get_scale_setting(tag)
+            if not scale_setting:
+                self.debug("No scale setting in tags, Removing tag: "+tag)
+            scale_value = scale_setting.value
+            mode_setting = get_mode_setting(tag)
+            if not mode_setting:
+```
+This way if there is no intersection between tags and tag\_names, the function returns and move to the next performer.<|>
+=============================
+<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> You can use python's built-in `any()` function to check if any of the `tags` are in `tag_names`. You can replace the for loop with the following:
+```lua
+if any(tag in tag_names for tag in tags):
+    for tag in tags:
+        self.check_performer_tagged_once(tags, tag_names)
+        tag = tag.replace("Upscale ", "")
+        scale_setting = get_scale_setting(tag)
+        if not scale_setting:
+            self.debug("No scale setting in tags, Removing tag: "+tag)
+        scale_value = scale_setting.value
+        mode_setting = get_mode_setting(tag)
+        if not mode_setting:
+            self.debug("No mode setting in tags, Removing tag: "+tag)
+        mode_value = mode_setting.value
+        performer_id = performer[1]
+        image_path = performer[0]
+        self.error("image_path: "+image_path)
+        self.error("performer_id: "+performer_id)
+        self.error("scale_setting: "+scale_setting)
+        self.error("scale_value: "+scale_value)
+        self.error("mode_setting: "+mode_setting)
+        self.error("mode_value: "+mode_value)
+        self.processPerformerImage(image_path, performer_id, scale_setting, scale_value, mode_setting, mode_value)
+```
+This will check if any of the `tags` are in `tag_names` before running the for loop, and if any are, it will then proceed to check each `tag` against `tags` and `tag_names`.<<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>: You can make the following changes to your code:
+
+1. Change the function signature of `check_tag_in_tag_names` to accept a list of tags instead of a single tag.
+```python
+def check_tag_in_tag_names(self, tags, tag_names):
+```
+2. Inside the function, use a for loop to iterate through the `tags` list and check if any tag is not in `tag_names`. If so, return False.
+```python
+    for tag in tags:
+        if tag not in tag_names:
+            return False
+    return True
+```
+3. In the `process_performer_image` function, call the `check_tag_in_tag_names` function before the for loop and if the function returns false, use the `continue` statement to move on to the next performer.
+```python
+    if not self.check_tag_in_tag_names(tags, tag_names):
+        continue
+```
+So the modified code would look something like this:
+```python
+def process_performer_image(self, performer, tag_names): 
+    performer_id = performer[0]  # Initialize performer_id here
+    performer_name = performer[1]
+    tags = self.findPerformersTagsbyID(performer_name)
+    if not self.check_tag_in_tag_names(tags, tag_names):
+        continue
+    self.check_tags_not_empty(tags)
+    for tag in tags:
+        self.check_performer_tagged_once(tags, tag_names)
+
+def check_tag_in_tag_names(self, tags, tag_names):
+    for tag in tags:
+        if tag not in tag_names:
+            return False
+    return True
+```<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>: It seems like you are trying to use the `continue` statement outside of a loop. The `continue` statement is used to skip the current iteration of a loop and move on to the next iteration. In your code, it appears that you are trying to use `continue` outside of a loop, which is causing a syntax error.
+
+You can try modifying your code to use a loop, such as a for loop, and then use the `continue` statement inside the loop to skip the current iteration.
+
+If you want to skip the current performer, you can add an `if` statement that checks if the performer's tags are not in tag\_names and then return or continue to the next performer.
+```scss
+    def process_performer_image(self, performer, tag_names): 
+        performer_id = performer[0]  # Initialize performer_id here
+        performer_name = performer[1]
+        tags = self.findPerformersTagsbyID(performer_name)
+        if not set(tags).intersection(tag_names):
+            return
+        self.check_tags_not_empty(tags)
+        for tag in tags:
+            self.check_performer_tagged_once(tags, tag_names)
+            tag = tag.replace("Upscale ", "")
+            scale_setting = get_scale_setting(tag)
+            if not scale_setting:
+                self.debug("No scale setting in tags, Removing tag: "+tag)
+            scale_value = scale_setting.value
+            mode_setting = get_mode_setting(tag)
+            if not mode_setting:
+```
+This way if there is no intersection between tags and tag\_names, the function returns and move to the next performer.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>

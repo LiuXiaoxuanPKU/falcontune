@@ -1,0 +1,196 @@
+A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. USER: What about pystray ASSISTANT: You can install `pystray` using `pip`, the Python package installer, by running the following command in your terminal or command prompt:
+```
+pip install pystray
+```
+This should install `pystray` and make it available for import in your Python code. You can then import the necessary modules and use `pystray` in your code:
+```python
+import pystray
+from PIL import Image
+
+# rest of the code...
+```
+Note that `pystray` requires `Pillow` as a dependency, so you need to make sure `Pillow` is installed before installing `pystray`.<|>USER: got this error === TypeError: setup\_keyboard\_shortcut() takes 0 positional arguments but 1 was given ASSISTANT: The error message indicates that the function `setup_keyboard_shortcut()` is defined to take no arguments, but it is being called with one argument.
+
+Looking at the code I provided earlier, I see that the `setup_keyboard_shortcut()` function is indeed defined to take no arguments:
+```python
+def setup_keyboard_shortcut():
+    keyboard.add_hotkey('<your-configurable-keyboard-combination>', main)
+    keyboard.wait()
+```
+However, it is being called with one argument in the following line:
+```python
+keyboard.add_hotkey('<your-configurable-keyboard-combination>', main, args=())
+```
+The `args=()` argument is not needed in this case, and it is causing the function to receive an unexpected argument.
+
+To fix this error, you can remove the `args=()` argument from the `keyboard.add_hotkey()` function call, like this:
+```python
+keyboard.add_hotkey('<your-configurable-keyboard-combination>', main)
+```
+This should resolve the TypeError and allow the program to run without issues.<|>USER: Here is my code so far below.. I still have these errors
+
+(env) C:\WORK\pyproj\HtmlGrapper>python 2hgrap.py
+Exception in thread Thread-1 (setup\_handler):
+Traceback (most recent call last):
+ File "C:\WORK\PyVer\Py311\Lib\threading.py", line 1038, in \_bootstrap\_inner
+ self.run()
+ File "C:\WORK\PyVer\Py311\Lib\threading.py", line 975, in run
+ self.\_target(\*self.\_args, \*\*self.\_kwargs)
+ File "C:\WORK\pyproj\HtmlGrapper\env\Lib\site-packages\pystray\\_base.py", line 394, in setup\_handler
+ setup(self)
+TypeError: setup\_keyboard\_shortcut() takes 0 positional arguments but 1 was given
+
+====
+
+Code
+
+===
+
+import pyperclip
+import keyboard
+import requests
+from bs4 import BeautifulSoup
+import time
+import pystray
+from PIL import Image
+
+def get\_url\_from\_clipboard():
+ url = pyperclip.paste()
+ if not url.startswith('http'):
+ print('The text in the clipboard is not a URL')
+ return None
+ return url
+
+def get\_simplest\_html(url):
+ response = requests.get(url)
+ if response.status\_code != 200:
+ print(f'The URL {url} is not reachable')
+ return None
+ soup = BeautifulSoup(response.content, 'html.parser')
+ return str(soup.html)
+
+def setup\_keyboard\_shortcut():
+# keyboard.add\_hotkey('ctrl+shift+h', process\_url\_from\_clipboard)
+ keyboard.add\_hotkey('ctrl+shift+h', main)
+def process\_url\_from\_clipboard():
+ url = get\_url\_from\_clipboard()
+ if url is None:
+ return
+ simplest\_html = get\_simplest\_html(url)
+ if simplest\_html is None:
+ return
+ pyperclip.copy(simplest\_html)
+
+def on\_quit(icon, item):
+ icon.stop()
+
+def start\_app():
+ icon = pystray.Icon('name', Image.open('grabber.ico'), 'Simple HTML Scraper')
+ icon.menu = pystray.Menu(
+ pystray.MenuItem('Quit', on\_quit)
+ )
+ icon.run(setup\_keyboard\_shortcut)
+ keyboard.wait()
+
+if \_\_name\_\_ == '\_\_main\_\_':
+ start\_app() ASSISTANT: The error is occurring because the `setup_keyboard_shortcut()` function is defined to take no arguments, but Pystray is calling it with an argument (the `icon` object).
+
+To fix this issue, you can modify the `setup_keyboard_shortcut()` function to accept an argument for the `icon` object, like this:
+```python
+def setup_keyboard_shortcut(icon):
+    keyboard.add_hotkey('ctrl+shift+h', process_url_from_clipboard)
+```
+Then, modify the `start_app()` function to pass the `icon` object to the `setup_keyboard_shortcut()` function, like this:
+```python
+def start_app():
+    icon = pystray.Icon('name', Image.open('grabber.ico'), 'Simple HTML Scraper')
+    icon.menu = pystray.Menu(
+        pystray.MenuItem('Quit', on_quit)
+    )
+    icon.run(setup_keyboard_shortcut, icon=icon)
+    keyboard.wait()
+```
+With these modifications, the `setup_keyboard_shortcut()` function should now receive the `icon` object as an argument and the error should be resolved.
+
+Let me know if this helps!<|>USER: Now this error === Traceback (most recent call last):
+ File "C:\WORK\pyproj\HtmlGrapper\2hgrap.py", line 50, in 
+ start\_app()
+ File "C:\WORK\pyproj\HtmlGrapper\2hgrap.py", line 45, in start\_app
+ icon.run(setup\_keyboard\_shortcut, icon=icon)
+TypeError: Icon.run() got an unexpected keyword argument 'icon' ASSISTANT: The `run()` method of the `Icon` class in `pystray` doesn't accept an `icon` argument. To pass the `icon` object to the callback function `setup_keyboard_shortcut()`, you can use a lambda function as follows:
+```css
+icon.run(lambda: setup_keyboard_shortcut(icon))
+```
+This will pass the `icon` object to the `setup_keyboard_shortcut()` function as an argument. So, you can modify your `start_app()` function as follows:
+```scss
+def start_app():
+    icon = pystray.Icon('name', Image.open('grabber.ico'), 'Simple HTML Scraper')
+    icon.menu = pystray.Menu(
+        pystray.MenuItem('Quit', on_quit)
+    )
+    icon.run(lambda: setup_keyboard_shortcut(icon))
+```
+This should solve the error you are facing.<|>
+=============================
+<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> You can install `pystray` using `pip`, the Python package installer, by running the following command in your terminal or command prompt:
+```
+pip install pystray
+```
+This should install `pystray` and make it available for import in your Python code. You can then import the necessary modules and use `pystray` in your code:
+```python
+import pystray
+from PIL import Image
+
+# rest of the code...
+```
+Note that `pystray` requires `Pillow` as a dependency, so you need to make sure `Pillow` is installed before installing `pystray`.<<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>: The error message indicates that the function `setup_keyboard_shortcut()` is defined to take no arguments, but it is being called with one argument.
+
+Looking at the code I provided earlier, I see that the `setup_keyboard_shortcut()` function is indeed defined to take no arguments:
+```python
+def setup_keyboard_shortcut():
+    keyboard.add_hotkey('<your-configurable-keyboard-combination>', main)
+    keyboard.wait()
+```
+However, it is being called with one argument in the following line:
+```python
+keyboard.add_hotkey('<your-configurable-keyboard-combination>', main, args=())
+```
+The `args=()` argument is not needed in this case, and it is causing the function to receive an unexpected argument.
+
+To fix this error, you can remove the `args=()` argument from the `keyboard.add_hotkey()` function call, like this:
+```python
+keyboard.add_hotkey('<your-configurable-keyboard-combination>', main)
+```
+This should resolve the TypeError and allow the program to run without issues.<<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>: The error is occurring because the `setup_keyboard_shortcut()` function is defined to take no arguments, but Pystray is calling it with an argument (the `icon` object).
+
+To fix this issue, you can modify the `setup_keyboard_shortcut()` function to accept an argument for the `icon` object, like this:
+```python
+def setup_keyboard_shortcut(icon):
+    keyboard.add_hotkey('ctrl+shift+h', process_url_from_clipboard)
+```
+Then, modify the `start_app()` function to pass the `icon` object to the `setup_keyboard_shortcut()` function, like this:
+```python
+def start_app():
+    icon = pystray.Icon('name', Image.open('grabber.ico'), 'Simple HTML Scraper')
+    icon.menu = pystray.Menu(
+        pystray.MenuItem('Quit', on_quit)
+    )
+    icon.run(setup_keyboard_shortcut, icon=icon)
+    keyboard.wait()
+```
+With these modifications, the `setup_keyboard_shortcut()` function should now receive the `icon` object as an argument and the error should be resolved.
+
+Let me know if this helps!<<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>: The `run()` method of the `Icon` class in `pystray` doesn't accept an `icon` argument. To pass the `icon` object to the callback function `setup_keyboard_shortcut()`, you can use a lambda function as follows:
+```css
+icon.run(lambda: setup_keyboard_shortcut(icon))
+```
+This will pass the `icon` object to the `setup_keyboard_shortcut()` function as an argument. So, you can modify your `start_app()` function as follows:
+```scss
+def start_app():
+    icon = pystray.Icon('name', Image.open('grabber.ico'), 'Simple HTML Scraper')
+    icon.menu = pystray.Menu(
+        pystray.MenuItem('Quit', on_quit)
+    )
+    icon.run(lambda: setup_keyboard_shortcut(icon))
+```
+This should solve the error you are facing.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>

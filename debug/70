@@ -1,0 +1,180 @@
+A chat between a curious user and an artificial intelligence assistant. The assistant gives helpful, detailed, and polite answers to the user's questions. USER: make code that checks if the tel or cellphone iis set inphp. If both are do cell if only one is do that. Parse it from this contact card. The card is in a file called example.vcf
+ BEGIN:VCARD
+VERSION:3.0
+PRODID:-//Apple Inc.//iPhone OS 16.2//EN
+N:Contact;Everything;Larson;;
+FN:Everything Larson Contact
+NICKNAME:The Goat
+ORG:Nowhere LLC;
+TITLE:Tester
+EMAIL;type=INTERNET;type=HOME;type=pref:carlforman123@gmail.com
+EMAIL;type=INTERNET;type=WORK:7999828@philasd.org
+item1.EMAIL;type=INTERNET:carl@icloud.com
+item1.X-ABLabel:iCloud
+item2.EMAIL;type=INTERNET:cf5magic@gmail.com
+item2.X-ABLabel:\_$!!$\_
+TEL;type=CELL;type=VOICE;type=pref:(267) 804-9861
+TEL;type=HOME;type=VOICE:(215) 753-9393
+TEL;type=WORK;type=VOICE:(215) 666-6666
+item3.TEL:(215) 343-2545
+item3.X-ABLabel:\_$!!$\_
+TEL;type=IPHONE;type=CELL;type=VOICE:(215) 613-2155
+item4.ADR;type=HOME;type=pref:;;612 West Sedgwick Street;Philadelphia;PA;19119;United States
+item4.X-ABADR:us
+item5.URL;type=pref:carlfoeman.com
+item5.X-ABLabel:\_$!!$\_
+BDAY:2017-02-11
+item6.X-ABDATE;X-APPLE-OMIT-YEAR=1604;type=pref:1604-11-11
+item6.X-ABLabel:\_$!!$\_
+item7.X-ABRELATEDNAMES;type=pref:Sylvia Forman
+item7.X-ABLabel:\_$!!$\_
+item8.X-ABRELATEDNAMES:Sean forman
+item8.X-ABLabel:\_$!!$\_
+END:VCARD ASSISTANT: Here's a PHP code that reads the given vCard file and checks if there is a cell phone number or a telephone number present in the card:
+```php
+<?php
+
+// Set the filename of the vCard file
+$filename = "example.vcf";
+
+// Read the contents of the file into a string
+$file_contents = file_get_contents($filename);
+
+// Use a regular expression to find the cell and telephone numbers in the file
+$cell_regex = '/TEL;type=CELL;.*:(.*)/';
+$tel_regex = '/TEL;type=(?!CELL).*:(.*)/';
+$has_cell = preg_match($cell_regex, $file_contents, $matches);
+$has_tel = preg_match($tel_regex, $file_contents, $matches);
+
+// Check if there is a cell phone number or a telephone number present in the vCard file
+if ($has_cell && $has_tel) {
+    echo "Both cell and telephone numbers are present.\n";
+    // Do cell phone stuff here
+} elseif ($has_cell) {
+    echo "Only cell phone number is present.\n";
+    // Do cell phone stuff here
+} elseif ($has_tel) {
+    echo "Only telephone number is present.\n";
+    // Do telephone stuff here
+} else {
+    echo "No cell or telephone number is present.\n";
+    // Do no number stuff here
+}
+
+?>
+```
+The regular expressions used in this code look for the "TEL" line in the vCard file, followed by either "type=CELL" for the cell phone number or "type=" for the telephone number. The telephone number regular expression uses a negative lookahead to exclude the "CELL" type. If a match is found, the phone number is captured in the first matching group of the regular expression. The `preg_match` function returns the number of matches found, which is used to determine if a cell phone number or a telephone number is present in the file.<|>USER: have it pull out the cell one if both are, telephone if only telephone is and cell if only cell is. The cell is this line.TEL;type=CELL;type=VOICE;type=pref:(267) 804-9861
+the telephone is item3.TEL:(215) 343-2545 ASSISTANT: Sure! Here's an updated PHP code that extracts the cell phone number if both cell and telephone numbers are present, the telephone number if only the telephone number is present, and the cell phone number if only the cell phone number is present:
+```php
+<?php
+
+// Set the filename of the vCard file
+$filename = "example.vcf";
+
+// Read the contents of the file into a string
+$file_contents = file_get_contents($filename);
+
+// Use a regular expression to find the cell and telephone numbers in the file
+$cell_regex = '/TEL;type=CELL;.*:(.*)/';
+$tel_regex = '/item3.TEL:(.*)/';
+$has_cell = preg_match($cell_regex, $file_contents, $matches_cell);
+$has_tel = preg_match($tel_regex, $file_contents, $matches_tel);
+
+// Check if there is a cell phone number or a telephone number present in the vCard file
+if ($has_cell && $has_tel) {
+    echo "Both cell and telephone numbers are present.\n";
+    $cell_number = $matches_cell[1];
+    // Do cell phone stuff here
+    echo "Cell Phone Number: $cell_number\n";
+} elseif ($has_tel) {
+    echo "Only telephone number is present.\n";
+    $tel_number = $matches_tel[1];
+    // Do telephone stuff here
+    echo "Telephone Number: $tel_number\n";
+} elseif ($has_cell) {
+    echo "Only cell phone number is present.\n";
+    $cell_number = $matches_cell[1];
+    // Do cell phone stuff here
+    echo "Cell Phone Number: $cell_number\n";
+} else {
+    echo "No cell or telephone number is present.\n";
+    // Do no number stuff here
+}
+
+?>
+```
+In this updated code, we added two new variables, `$matches_cell` and `$matches_tel`, to store the matches found by the regular expressions for the cell phone number and the telephone number, respectively. We then use an `if` statement to check if both a cell and telephone number are present, and if so, we extract the cell phone number using the matches from the `$matches_cell` variable. If only the telephone number is present, we extract the telephone number using the matches from the `$matches_tel` variable. And if only the cell phone number is present, we extract the cell phone number using the matches from the `$matches_cell` variable. Finally, we print the extracted phone number using `echo`.<|>
+=============================
+<|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> Here's a PHP code that reads the given vCard file and checks if there is a cell phone number or a telephone number present in the card:
+```php
+<?php
+
+// Set the filename of the vCard file
+$filename = "example.vcf";
+
+// Read the contents of the file into a string
+$file_contents = file_get_contents($filename);
+
+// Use a regular expression to find the cell and telephone numbers in the file
+$cell_regex = '/TEL;type=CELL;.*:(.*)/';
+$tel_regex = '/TEL;type=(?!CELL).*:(.*)/';
+$has_cell = preg_match($cell_regex, $file_contents, $matches);
+$has_tel = preg_match($tel_regex, $file_contents, $matches);
+
+// Check if there is a cell phone number or a telephone number present in the vCard file
+if ($has_cell && $has_tel) {
+    echo "Both cell and telephone numbers are present.\n";
+    // Do cell phone stuff here
+} elseif ($has_cell) {
+    echo "Only cell phone number is present.\n";
+    // Do cell phone stuff here
+} elseif ($has_tel) {
+    echo "Only telephone number is present.\n";
+    // Do telephone stuff here
+} else {
+    echo "No cell or telephone number is present.\n";
+    // Do no number stuff here
+}
+
+?>
+```
+The regular expressions used in this code look for the "TEL" line in the vCard file, followed by either "type=CELL" for the cell phone number or "type=" for the telephone number. The telephone number regular expression uses a negative lookahead to exclude the "CELL" type. If a match is found, the phone number is captured in the first matching group of the regular expression. The `preg_match` function returns the number of matches found, which is used to determine if a cell phone number or a telephone number is present in the file.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|> Sure! Here's an updated PHP code that extracts the cell phone number if both cell and telephone numbers are present, the telephone number if only the telephone number is present, and the cell phone number if only the cell phone number is present:
+```php
+<?php
+
+// Set the filename of the vCard file
+$filename = "example.vcf";
+
+// Read the contents of the file into a string
+$file_contents = file_get_contents($filename);
+
+// Use a regular expression to find the cell and telephone numbers in the file
+$cell_regex = '/TEL;type=CELL;.*:(.*)/';
+$tel_regex = '/item3.TEL:(.*)/';
+$has_cell = preg_match($cell_regex, $file_contents, $matches_cell);
+$has_tel = preg_match($tel_regex, $file_contents, $matches_tel);
+
+// Check if there is a cell phone number or a telephone number present in the vCard file
+if ($has_cell && $has_tel) {
+    echo "Both cell and telephone numbers are present.\n";
+    $cell_number = $matches_cell[1];
+    // Do cell phone stuff here
+    echo "Cell Phone Number: $cell_number\n";
+} elseif ($has_tel) {
+    echo "Only telephone number is present.\n";
+    $tel_number = $matches_tel[1];
+    // Do telephone stuff here
+    echo "Telephone Number: $tel_number\n";
+} elseif ($has_cell) {
+    echo "Only cell phone number is present.\n";
+    $cell_number = $matches_cell[1];
+    // Do cell phone stuff here
+    echo "Cell Phone Number: $cell_number\n";
+} else {
+    echo "No cell or telephone number is present.\n";
+    // Do no number stuff here
+}
+
+?>
+```
+In this updated code, we added two new variables, `$matches_cell` and `$matches_tel`, to store the matches found by the regular expressions for the cell phone number and the telephone number, respectively. We then use an `if` statement to check if both a cell and telephone number are present, and if so, we extract the cell phone number using the matches from the `$matches_cell` variable. If only the telephone number is present, we extract the telephone number using the matches from the `$matches_tel` variable. And if only the cell phone number is present, we extract the cell phone number using the matches from the `$matches_cell` variable. Finally, we print the extracted phone number using `echo`.<|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|><|endoftext|>
