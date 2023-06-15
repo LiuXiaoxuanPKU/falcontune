@@ -1,0 +1,41 @@
+[
+    {
+        "id": "IUWyjK9_0",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "Write."
+            },
+            {
+                "from": "gpt",
+                "value": "Here is `."
+            }
+        ]
+    },
+    {
+        "id": "1",
+        "conversations": [
+            {
+                "from": "gpt",
+                "value": "Write."
+            },
+            {
+                "from": "gpt",
+                "value": "Here is `."
+            }
+        ]
+    },
+    {
+        "id": "2",
+        "conversations": [
+            {
+                "from": "human",
+                "value": "sdsdsd."
+            },
+            {
+                "from": "gpt",
+                "value": "no."
+            }
+        ]
+    }
+]

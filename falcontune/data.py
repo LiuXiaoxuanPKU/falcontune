@@ -196,17 +196,18 @@ class TrainShareGPT(TrainDataBase):
         train_dataset = dataset.map(
             lambda ele: self.tokenize_inputs(ele),
             batched=True,
+        ).filter(
+            lambda ele: ele["raw_conversations"] != "IGNORE"
+        ).map(
             remove_columns=["conversations", "id"],
         )
         self.train_data = train_dataset.with_format("torch")
 
 
     def tokenize_inputs(self, sources):
-        conversations = [make_prompt(None, None, None, c) for c in sources["conversations"]]
-        conversations = [c for c in conversations if c != "IGNORE"]
-        
+        raw_conversations = [make_prompt(None, None, None, c) for c in sources["conversations"]]        
         input_ids = self.tokenizer(
-            conversations,
+            raw_conversations,
             return_tensors="pt",
             padding="max_length",
             max_length=self.cutoff_len,
@@ -216,36 +217,30 @@ class TrainShareGPT(TrainDataBase):
 
         # Mask targets
         sep = " ASSISTANT: "
-        for conversation, target in zip(conversations, targets):
+        for conversation, target in zip(raw_conversations, targets):
+            if conversation == "IGNORE":
+                continue
             total_len = int(target.ne(self.tokenizer.pad_token_id).sum())
-
             rounds = conversation.split("<|>")
             cur_len = 0
             for i, rou in enumerate(rounds):
                 if rou == "":
                     break
+                rou += '<|>'
                 parts = rou.split(sep)
                 if len(parts) != 2:
                     break
-                round_len = len(self.tokenizer(rou).input_ids) + 1
+                round_len = len(self.tokenizer(rou).input_ids)
                 parts[0] += sep
                 instruction_len = len(self.tokenizer(parts[0]).input_ids) - 1
                 target[cur_len : cur_len + instruction_len] = IGNORE_TOKEN_ID
                 cur_len += round_len 
             
-            if False:
-                print(conversation)
-                print("=============================")
-                z = target.clone()
-                z = torch.where(z == IGNORE_TOKEN_ID, self.tokenizer.pad_token_id, z)
-                print(self.tokenizer.decode(z))
-                exit(0)
-            
             if cur_len < self.tokenizer.model_max_length:
                 if cur_len != total_len:
                     target[:] = IGNORE_TOKEN_ID
                     print(
-                        f"WARNING: tokenization mismatch: {cur_len} vs. {total_len}."
+                        f"======WARNING: tokenization mismatch: {cur_len} vs. {total_len}."
                         f" (ignored)"
                     )
 
@@ -253,6 +248,7 @@ class TrainShareGPT(TrainDataBase):
             input_ids=input_ids,
             labels=targets,
             attention_mask=input_ids.ne(self.tokenizer.pad_token_id),
+            raw_conversations=raw_conversations
         )
     
 def make_prompt(instruction, input_, output="", conversation=[], type="shareGPT"):
